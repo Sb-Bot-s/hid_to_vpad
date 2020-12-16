@@ -31,7 +31,7 @@ WUPS_PLUGIN_AUTHOR("Maschell");
 WUPS_PLUGIN_LICENSE("GPL");
 
 // We want access to the SDCard!
-WUPS_FS_ACCESS()
+WUPS_USE_WUT_CRT()
 
 #define SD_PATH                     "sd:"
 #define WIIU_PATH                   "/wiiu"
@@ -55,7 +55,7 @@ DEINITIALIZE_PLUGIN() {
     ControllerPatcher::stopNetworkServer();
 }
 
-ON_APPLICATION_ENDING() {
+ON_APPLICATION_END() {
     //CursorDrawer::destroyInstance();
     DEBUG_FUNCTION_LINE("ON_APPLICATION_ENDING\n");
     ControllerPatcher::destroyConfigHelper();
