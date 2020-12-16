@@ -1,7 +1,6 @@
-FROM wups/core-with-wut:0.1
+FROM wiiuenv/devkitppc:20200810
 
-# Get dependencies
-COPY --from=wiiuwut/libutils:0.1 /artifacts $WUT_ROOT
-COPY --from=wiiuwut/controller_patcher:0.1 /artifacts $WUT_ROOT
+COPY --from=wiiuenv/wiiupluginsystem:20200829 /artifacts $DEVKITPRO
+COPY --from=wiiuenv/controller_patcher:20201216 /artifacts $DEVKITPRO
 
 WORKDIR project

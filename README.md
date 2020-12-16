@@ -64,19 +64,19 @@ In order to build this application you need serval libs:
 
 Install them (in this order) according to their README's. Don't forget the dependencies of the libs itself.
 
-### Building using the Dockerfile
-It's possible to use a docker image for building. This way you don't need anything installed on your host system.
+## Building via docker
 
 ```
-# Build docker image (only needed once
-docker build . -t hidtovpadwups-builder
+# Build docker image (only needed once)
+docker build . -t hid-to-vpad-plugin-builder
 
 # make 
-docker run -it --rm -v ${PWD}:/project hidtovpadwups-builder make
+docker run -it --rm -v ${PWD}:/project hid-to-vpad-plugin-builder make
 
 # make clean
-docker run -it --rm -v ${PWD}:/project hidtovpadwups-builder make clean
+docker run -it --rm -v ${PWD}:/project hid-to-vpad-plugin-builder make clean
 ```
+
 
 # Credits
 - A big thanks goes out to <b>dimok</b> for creating the HBL, the dynamic libs and every stuff he made. The "environment" of this app is copied from ddd, turned out to be a "hello world" with useful extra stuff.  
