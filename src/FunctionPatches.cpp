@@ -68,7 +68,7 @@ DECL_FUNCTION(int32_t, WPADProbe, WPADChan chan, uint32_t * result ) {
 }
 
 DECL_FUNCTION(WPADConnectCallback,WPADSetConnectCallback,WPADChan chan, WPADConnectCallback callback ) {
-    //log_printf("WPADSetConnectCallback chan %d %08X\n",chan,callback);
+    //log_printf("WPADSetConnectCallback chan %d %08X",chan,callback);
 
     ControllerPatcher::setWPADConnectCallback(chan,callback);
 
@@ -84,7 +84,7 @@ DECL_FUNCTION(WPADConnectCallback,WPADSetConnectCallback,WPADChan chan, WPADConn
 }
 
 DECL_FUNCTION(WPADExtensionCallback,WPADSetExtensionCallback,WPADChan chan, WPADExtensionCallback callback ) {
-    //log_printf("WPADSetExtensionCallback chan %d %08X\n",chan,callback);
+    //log_printf("WPADSetExtensionCallback chan %d %08X",chan,callback);
 
     ControllerPatcher::setKPADExtensionCallback(chan,callback);
 
@@ -100,7 +100,7 @@ DECL_FUNCTION(WPADExtensionCallback,WPADSetExtensionCallback,WPADChan chan, WPAD
 }
 
 DECL_FUNCTION(WPADConnectCallback,KPADSetConnectCallback,WPADChan chan, WPADConnectCallback callback ) {
-    //log_printf("KPADSetConnectCallback chan %d %08X\n",chan,callback);
+    //log_printf("KPADSetConnectCallback chan %d %08X",chan,callback);
 
     ControllerPatcher::setKPADConnectedCallback(chan,callback);
 
@@ -129,7 +129,7 @@ DECL_FUNCTION(uint8_t, WPADGetBatteryLevel, WPADChan chan) {
 
 //In case a game relies on this...
 DECL_FUNCTION(uint32_t, WPADGetDataFormat, WPADChan chan) {
-    //log_printf("WPADGetDataFormat chan: %d result: %d\n",chan,result);
+    //log_printf("WPADGetDataFormat chan: %d result: %d",chan,result);
     if((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
             (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
             (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||

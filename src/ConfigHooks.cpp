@@ -23,12 +23,12 @@
 #include "WUPSConfigItemPadMapping.h"
 
 void rumbleChanged(WUPSConfigItemBoolean * item, bool newValue) {
-    DEBUG_FUNCTION_LINE("rumbleChanged %d \n",newValue);
+    DEBUG_FUNCTION_LINE("rumbleChanged %d ",newValue);
     ControllerPatcher::setRumbleActivated(newValue);
 }
 
 void networkClient(WUPSConfigItemBoolean * item, bool newValue) {
-    DEBUG_FUNCTION_LINE("Trigger network %d\n",newValue);
+    DEBUG_FUNCTION_LINE("Trigger network %d",newValue);
     ControllerPatcher::setNetworkControllerActivated(newValue);
     if(newValue) {
         ControllerPatcher::startNetworkServer();

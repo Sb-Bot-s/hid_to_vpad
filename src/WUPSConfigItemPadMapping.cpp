@@ -115,12 +115,12 @@ void WUPSConfigItemPadMapping::checkForInput() {
 
         int32_t result = ControllerPatcher::gettingInputAllDevices(hiddata,inputsize);
         if(result > 0) {
-            //log_printf("got %d results\n",result);
+            //log_printf("got %d results",result);
             for(int32_t i =0; i<result; i++) {
                 for(int32_t j = 0; j<HID_MAX_PADS_COUNT; j++) {
-                    //log_printf("check pad %d. %08X\n",j,hiddata[i].button_data[j].btn_h);
+                    //log_printf("check pad %d. %08X",j,hiddata[i].button_data[j].btn_h);
                     if(hiddata[i].button_data[j].btn_h != 0) {
-                        //log_printf("It pressed a buttons!\n",result);
+                        //log_printf("It pressed a buttons!",result);
                         pad_result.pad = j;
                         pad_result.vidpid.vid = hiddata[i].device_info.vidpid.vid;
                         pad_result.vidpid.pid = hiddata[i].device_info.vidpid.pid;
@@ -128,7 +128,7 @@ void WUPSConfigItemPadMapping::checkForInput() {
                         pad_result.type = hiddata[i].type;
 
                         gotPress = true;
-                        DEBUG_FUNCTION_LINE("%04X %04X (PAD: %d) pressed a buttons %08X\n",hiddata[i].device_info.vidpid.vid,hiddata[i].device_info.vidpid.pid,j,hiddata[i].button_data[j].btn_h);
+                        DEBUG_FUNCTION_LINE("%04X %04X (PAD: %d) pressed a buttons %08X",hiddata[i].device_info.vidpid.vid,hiddata[i].device_info.vidpid.pid,j,hiddata[i].button_data[j].btn_h);
                         break;
                     }
                 }

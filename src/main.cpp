@@ -41,10 +41,10 @@ ON_APPLICATION_START(args) {
     socket_lib_init();
     log_init();
 
-    DEBUG_FUNCTION_LINE("Initializing the controller data\n");
+    DEBUG_FUNCTION_LINE("Initializing the controller data");
     ControllerPatcher::Init(CONTROLLER_PATCHER_PATH);
     ControllerPatcher::enableControllerMapping();
-    DEBUG_FUNCTION_LINE("Starting HID to VPAD network server\n");
+    DEBUG_FUNCTION_LINE("Starting HID to VPAD network server");
     ControllerPatcher::startNetworkServer();
     ControllerPatcher::disableWiiUEnergySetting();
 }
@@ -57,13 +57,13 @@ DEINITIALIZE_PLUGIN() {
 
 ON_APPLICATION_END() {
     //CursorDrawer::destroyInstance();
-    DEBUG_FUNCTION_LINE("ON_APPLICATION_ENDING\n");
+    DEBUG_FUNCTION_LINE("ON_APPLICATION_ENDING");
     ControllerPatcher::destroyConfigHelper();
-    DEBUG_FUNCTION_LINE("Calling stopNetworkServer\n");
+    DEBUG_FUNCTION_LINE("Calling stopNetworkServer");
     ControllerPatcher::stopNetworkServer();
-    DEBUG_FUNCTION_LINE("Calling resetCallbackData\n");
+    DEBUG_FUNCTION_LINE("Calling resetCallbackData");
     ControllerPatcher::resetCallbackData();
     ControllerPatcher::restoreWiiUEnergySetting();
 
-    DEBUG_FUNCTION_LINE("Closing\n");
+    DEBUG_FUNCTION_LINE("Closing");
 }
