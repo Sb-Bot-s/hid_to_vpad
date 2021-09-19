@@ -25,46 +25,53 @@
 #include <padscore/wpad.h>
 #include <utils/StringTools.h>
 
-
 // At this point the VPADRead function is already patched. But we want to use the original function (note: this could be patched by a different plugin)
 typedef int32_t (*VPADReadFunction) (VPADChan chan, VPADStatus *buffer, uint32_t buffer_size, VPADReadError *error);
 extern VPADReadFunction real_VPADRead;
 
-WUPSConfigItemPadMapping::WUPSConfigItemPadMapping(std::string configID, std::string displayName, UController_Type controller) : WUPSConfigItem(configID,displayName)  {
-    this->controllerType = controller;
+bool WUPSConfigItemPadMapping_callCallback(void *context) {
+    auto *item = (ConfigItemPadMapping *) context;
+    if (item->callback != nullptr) {
+        ((ConfigItemPadMappingChangedCallback) (item->callback))(item);
+        return true;
+    }
+    return false;
 }
 
-WUPSConfigItemPadMapping::~WUPSConfigItemPadMapping() {
-
+void restoreDefault(void *context) {
+    auto *item = (ConfigItemPadMapping *) context;
+    memset(&item->mappedPadInfo,0,sizeof(item->mappedPadInfo));
 }
 
-bool WUPSConfigItemPadMapping::updatePadInfo() {
-    int32_t found = ControllerPatcher::getActiveMappingSlot(controllerType);
+bool updatePadInfo(ConfigItemPadMapping *item) {
+    int32_t found = ControllerPatcher::getActiveMappingSlot(item->controllerType);
     if(found != -1) {
-        ControllerMappingPADInfo * info = ControllerPatcher::getControllerMappingInfo(controllerType,found);
-        if(info != NULL) {
-            memcpy(&mappedPadInfo,info,sizeof(mappedPadInfo));
+        ControllerMappingPADInfo * info = ControllerPatcher::getControllerMappingInfo(item->controllerType,found);
+        if(info != nullptr) {
+            memcpy(&item->mappedPadInfo,info,sizeof(item->mappedPadInfo));
             return true;
         }
     } else {
-        this->restoreDefault();
+        restoreDefault(item);
         return false;
     }
     return false;
 }
 
-std::string WUPSConfigItemPadMapping::getCurrentValueDisplay() {
-    if(!updatePadInfo()) {
-        return "No Device";
+int32_t WUPSConfigItemPadMapping_getCurrentValueDisplay(void *context, char *out_buf, int32_t out_size) {
+    auto *item = (ConfigItemPadMapping *) context;
+    if(!updatePadInfo(item)) {
+        snprintf(out_buf, out_size, "No Device");
+        return 0;
     }
-    std::string name = "";
+    std::string name;
     std::string isConnectedString = "attached";
 
-    if(!ControllerPatcher::isControllerConnectedAndActive(controllerType)) {
+    if(!ControllerPatcher::isControllerConnectedAndActive(item->controllerType)) {
         isConnectedString = "detached";
     }
 
-    ControllerMappingPADInfo * info = &mappedPadInfo;
+    ControllerMappingPADInfo * info = &item->mappedPadInfo;
 
     if(info->type == CM_Type_Controller) {
         std::string titleString = ControllerPatcher::getIdentifierByVIDPID(info->vidpid.vid,info->vidpid.pid);
@@ -82,20 +89,14 @@ std::string WUPSConfigItemPadMapping::getCurrentValueDisplay() {
         name = "Mouse / Keyboard";
     }
 
-    return name.c_str();
+    strncpy(out_buf, name.c_str(), out_size);
+
+    return 0;
 }
 
-std::string WUPSConfigItemPadMapping::getCurrentValueSelectedDisplay() {
-    return getCurrentValueDisplay();
-}
-
-void WUPSConfigItemPadMapping::onSelected(bool isSelected) {
-
-}
-
-void WUPSConfigItemPadMapping::checkForInput() {
+void checkForInput(ConfigItemPadMapping *item) {
     int32_t inputsize = gHIDMaxDevices;
-    InputData * hiddata = (InputData * ) malloc(sizeof(InputData)*inputsize);
+    auto * hiddata = (InputData * ) malloc(sizeof(InputData)*inputsize);
     memset(hiddata,0,sizeof(InputData)*inputsize);
 
     ControllerMappingPADInfo pad_result;
@@ -139,76 +140,66 @@ void WUPSConfigItemPadMapping::checkForInput() {
         }
     }
     if(gotPress) {
-        // TODO: Save the choice and use a callback??!??!
-        ControllerPatcher::addControllerMapping(this->controllerType,pad_result);
-        updatePadInfo();
+        ControllerPatcher::addControllerMapping(item->controllerType,pad_result);
+        updatePadInfo(item);
+        WUPSConfigItemPadMapping_callCallback(item);
     }
 
     free(hiddata);
 }
 
-void WUPSConfigItemPadMapping::onButtonPressed(WUPSConfigButtons buttons) {
+void WUPSConfigItemPadMapping_onButtonPressed(void *context, WUPSConfigButtons buttons) {
+    auto *item = (ConfigItemPadMapping *) context;
     if(buttons & WUPS_CONFIG_BUTTON_A) {
         // Lets remove the old mapping.
-        ControllerPatcher::resetControllerMapping(this->controllerType);
+        ControllerPatcher::resetControllerMapping(item->controllerType);
 
-        // And draw the text on the screen the config menu is drawn to.
-        wups_overlay_options_type_t screen = this->lastVisibleOnScreen();
-
-        WUPS_Overlay_OSScreenClear(screen);
-
-        // TODO: Add more information about the target (e.g. is the mapping for the gamepad or pro controller 1/2/3/4)
-        WUPS_Overlay_PrintTextOnScreen(screen, 0,0,"Press a button on the HID controller to map it.");
-        WUPS_Overlay_PrintTextOnScreen(screen, 0,10,"Press HOME or B on the gamepad to abort.");
-
-        WUPS_Overlay_FlipBuffers(screen);
-
-        checkForInput();
+        checkForInput(item);
     }
 }
 
-bool WUPSConfigItemPadMapping::isMovementAllowed() {
+bool WUPSConfigItemPadMapping_isMovementAllowed(void *context) {
     return true;
 }
 
-std::string WUPSConfigItemPadMapping::persistValue() {
-    updatePadInfo();
-    if(mappedPadInfo.type == CM_Type_Controller){
-        return StringTools::strfmt("%d,%d,%d,%d",mappedPadInfo.vidpid.vid,mappedPadInfo.vidpid.pid,mappedPadInfo.pad,mappedPadInfo.type);
-    }
-    return "0";
+void WUPSConfigItemPadMapping_onDelete(void *context) {
+    auto *item = (ConfigItemPadMapping *) context;
+
+    free(item);
 }
 
-void WUPSConfigItemPadMapping::loadValue(std::string persistedValue) {
-    if(persistedValue.compare("0") == 0) {
-        // No device mapped.
-        return;
+extern "C" bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle cat, const char *configID, const char *displayName, UController_Type controllerType, ConfigItemPadMappingChangedCallback callback) {
+    if (cat == 0 || displayName == nullptr) {
+        return false;
     }
-    std::vector<std::string> result = StringTools::stringSplit(persistedValue, ",");
-    if(result.size() != 4) {
-        return;
+    auto *item = (ConfigItemPadMapping *) malloc(sizeof(ConfigItemPadMapping));
+    if (item == nullptr) {
+        return false;
     }
 
-    updatePadInfo();
+    strncpy(item->configId, configID, sizeof(item->configId));
+    item->controllerType = controllerType;
+    item->callback = (void *) callback;
+    memset(&item->mappedPadInfo,0, sizeof(item->mappedPadInfo));
 
-    this->mappedPadInfo.vidpid.vid = atoi(result.at(0).c_str());
-    this->mappedPadInfo.vidpid.pid = atoi(result.at(1).c_str());
-    this->mappedPadInfo.pad = atoi(result.at(2).c_str());
-    //Currently only persisting mapped controllers is supported.
-    this->mappedPadInfo.type = CM_Type_Controller; //atoi(result.at(3).c_str());
+    WUPSConfigCallbacks_t callbacks = {
+            .getCurrentValueDisplay = &WUPSConfigItemPadMapping_getCurrentValueDisplay,
+            .getCurrentValueSelectedDisplay = &WUPSConfigItemPadMapping_getCurrentValueDisplay,
+            .onSelected = nullptr,
+            .restoreDefault = &restoreDefault,
+            .isMovementAllowed = &WUPSConfigItemPadMapping_isMovementAllowed,
+            .callCallback = nullptr,
+            .onButtonPressed = &WUPSConfigItemPadMapping_onButtonPressed,
+            .onDelete = &WUPSConfigItemPadMapping_onDelete
+    };
 
-    ControllerPatcher::resetControllerMapping(this->controllerType);
-    // TODO: Save the choice and use a callback??!??!
-    ControllerPatcher::addControllerMapping(this->controllerType,this->mappedPadInfo);
+    if (WUPSConfigItem_Create(&item->handle, configID, displayName, callbacks, item) < 0) {
+        free(item);
+        return false;
+    }
 
-    return;
-}
-
-void WUPSConfigItemPadMapping::restoreDefault() {
-    memset(&mappedPadInfo,0,sizeof(mappedPadInfo));
-}
-
-bool WUPSConfigItemPadMapping::callCallback() {
-    // Currently we don't use a callback.
-    return false;
+    if (WUPSConfigCategory_AddItem(cat, item->handle) < 0) {
+        return false;
+    }
+    return true;
 }

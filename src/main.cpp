@@ -17,36 +17,46 @@
 
 #include <wups.h>
 
-#include <string.h>
+#include <cstring>
 #include <controller_patcher/ControllerPatcher.hpp>
 #include <utils/logger.h>
 
-#include <nsysnet/socket.h>
-#include "WUPSConfigItemPadMapping.h"
-
+WUPS_PLUGIN_ID("hid_to_vpad");
 WUPS_PLUGIN_NAME("HID to VPAD lite");
 WUPS_PLUGIN_DESCRIPTION("Enables HID devices as controllers on your Wii U");
 WUPS_PLUGIN_VERSION("v1.0");
 WUPS_PLUGIN_AUTHOR("Maschell");
 WUPS_PLUGIN_LICENSE("GPL");
 
-// We want access to the SDCard!
-WUPS_USE_WUT_CRT()
+WUPS_USE_WUT_DEVOPTAB()
+WUPS_USE_STORAGE()
 
 #define SD_PATH                     "sd:"
 #define WIIU_PATH                   "/wiiu"
 #define DEFAULT_HID_TO_VPAD_PATH    SD_PATH WIIU_PATH "/apps/hidtovpad"
 
-ON_APPLICATION_START(args) {
-    socket_lib_init();
-    log_init();
+extern int32_t runNetworkClient;
+
+
+void ConfigLoad();
+ON_APPLICATION_START() {
+    WHBLogUdpInit();
 
     DEBUG_FUNCTION_LINE("Initializing the controller data");
     ControllerPatcher::Init(CONTROLLER_PATCHER_PATH);
     ControllerPatcher::enableControllerMapping();
-    DEBUG_FUNCTION_LINE("Starting HID to VPAD network server");
-    ControllerPatcher::startNetworkServer();
+
+    ConfigLoad();
+
+    if (runNetworkClient){
+        DEBUG_FUNCTION_LINE("Starting HID to VPAD network server");
+        ControllerPatcher::startNetworkServer();
+    }
     ControllerPatcher::disableWiiUEnergySetting();
+}
+
+INITIALIZE_PLUGIN(){
+    WHBLogUdpInit();
 }
 
 DEINITIALIZE_PLUGIN() {
@@ -55,7 +65,7 @@ DEINITIALIZE_PLUGIN() {
     ControllerPatcher::stopNetworkServer();
 }
 
-ON_APPLICATION_END() {
+ON_APPLICATION_REQUESTS_EXIT() {
     //CursorDrawer::destroyInstance();
     DEBUG_FUNCTION_LINE("ON_APPLICATION_ENDING");
     ControllerPatcher::destroyConfigHelper();

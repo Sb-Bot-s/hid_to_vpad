@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (C) 2018 Maschell
+ * Copyright (C) 2021 Maschell
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,51 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-#ifndef _WUPS_CONFIG_ITEM_PAD_MAPPING_H_
-#define _WUPS_CONFIG_ITEM_PAD_MAPPING_H_
-
-#include <string>
-#include <vector>
-#include <wups/config/WUPSConfigItem.h>
+#include <wups.h>
 #include <controller_patcher/ControllerPatcher.hpp>
 
-class WUPSConfigItemPadMapping;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef void (*PadMappingChangedCallback)(WUPSConfigItemPadMapping *, bool);
-
-class WUPSConfigItemPadMapping : public WUPSConfigItem {
-public:
-    WUPSConfigItemPadMapping(std::string configID, std::string displayName, UController_Type controller);
-
-    void checkForInput();
-
-    virtual ~WUPSConfigItemPadMapping();
-
-    void resetMappingAndDetachController();
-
-    bool updatePadInfo();
-
-    virtual std::string getCurrentValueDisplay();
-
-    virtual std::string getCurrentValueSelectedDisplay();
-
-    virtual void onSelected(bool isSelected);
-
-    virtual void onButtonPressed(WUPSConfigButtons buttons);
-
-    virtual bool isMovementAllowed();
-
-    virtual std::string persistValue();
-
-    virtual void loadValue(std::string persistedValue);
-
-    virtual void restoreDefault();
-
-    virtual bool callCallback();
-
-private:
-    UController_Type controllerType = UController_Type_Gamepad;
+typedef struct ConfigItemPadMapping {
+    WUPSConfigItemHandle handle;
+    char configId[32];
+    UController_Type controllerType;
     ControllerMappingPADInfo mappedPadInfo;
-};
+    void* callback;
+} ConfigItemPadMapping;
 
+typedef void (*ConfigItemPadMappingChangedCallback)(ConfigItemPadMapping *);
+
+bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle cat, const char *configID, const char *displayName, UController_Type controllerType, ConfigItemPadMappingChangedCallback callback);
+
+#ifdef __cplusplus
+}
 #endif

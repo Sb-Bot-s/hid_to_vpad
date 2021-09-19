@@ -17,8 +17,6 @@
 #include <wups.h>
 
 #include <controller_patcher/ControllerPatcher.hpp>
-#include <vpad/input.h>
-#include <padscore/wpad.h>
 
 DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buffer_size, VPADReadError *error) {
     int32_t result = real_VPADRead(chan, buffer, buffer_size, error);
@@ -38,7 +36,7 @@ DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buf
                 //OSSendAppSwitchRequest(5,0,0); //Open the home menu!
             }
 
-            if(error != NULL) {
+            if(error != nullptr) {
                 *error = VPAD_READ_SUCCESS;
             }
             result = 1; // We want the WiiU to ignore everything else.
@@ -58,7 +56,7 @@ DECL_FUNCTION(int32_t, WPADProbe, WPADChan chan, uint32_t * result ) {
             (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
             (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
             (chan == WPAD_CHAN_3 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro4))) {
-        if(result != NULL) {
+        if(result != nullptr) {
             *result = WPAD_EXT_PRO_CONTROLLER;
         }
         return 0;
@@ -76,7 +74,7 @@ DECL_FUNCTION(WPADConnectCallback,WPADSetConnectCallback,WPADChan chan, WPADConn
             (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
             (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
             (chan == WPAD_CHAN_3 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro4))) {
-        if(callback != NULL) {
+        if(callback != nullptr) {
             callback(chan,0);
         }
     }
@@ -92,7 +90,7 @@ DECL_FUNCTION(WPADExtensionCallback,WPADSetExtensionCallback,WPADChan chan, WPAD
             (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
             (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
             (chan == WPAD_CHAN_3 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro4))) {
-        if(callback != NULL) {
+        if(callback != nullptr) {
             callback(chan,WPAD_EXT_PRO_CONTROLLER);
         }
     }
@@ -108,7 +106,7 @@ DECL_FUNCTION(WPADConnectCallback,KPADSetConnectCallback,WPADChan chan, WPADConn
             (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
             (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
             (chan == WPAD_CHAN_3 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro4))) {
-        if(callback != NULL) {
+        if(callback != nullptr) {
             callback(chan,0);
         }
     }

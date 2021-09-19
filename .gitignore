@@ -56,3 +56,6 @@ hidtopad.cbp
 hidtopad.layout
 hidtopad.cbp
 hidtovpad.wps
+cmake-build-debug/
+.idea/
+CMakeLists.txt
