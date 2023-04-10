@@ -17,8 +17,8 @@
 
 #include <wups.h>
 
-#include <cstring>
 #include <controller_patcher/ControllerPatcher.hpp>
+#include <cstring>
 #include <utils/logger.h>
 
 
@@ -31,10 +31,10 @@ WUPS_PLUGIN_LICENSE("GPL");
 WUPS_USE_WUT_DEVOPTAB();
 WUPS_USE_STORAGE("hid_to_vpad");
 
-#define SD_PATH                     "fs:/vol/external01"
-#define WIIU_PATH                   "/wiiu"
-#define DEFAULT_HID_TO_VPAD_PATH          SD_PATH WIIU_PATH "/apps/hidtovpad"
-#define DEFAULT_CONTROLLER_PATCHER_PATCH  SD_PATH WIIU_PATH "/controller"
+#define SD_PATH                          "fs:/vol/external01"
+#define WIIU_PATH                        "/wiiu"
+#define DEFAULT_HID_TO_VPAD_PATH         SD_PATH WIIU_PATH "/apps/hidtovpad"
+#define DEFAULT_CONTROLLER_PATCHER_PATCH SD_PATH WIIU_PATH "/controller"
 
 extern int32_t runNetworkClient;
 
@@ -48,14 +48,14 @@ ON_APPLICATION_START() {
 
     ConfigLoad();
 
-    if (runNetworkClient){
+    if (runNetworkClient) {
         DEBUG_FUNCTION_LINE("Starting HID to VPAD network server");
         ControllerPatcher::startNetworkServer();
     }
     ControllerPatcher::disableWiiUEnergySetting();
 }
 
-INITIALIZE_PLUGIN(){
+INITIALIZE_PLUGIN() {
     WHBLogUdpInit();
 }
 

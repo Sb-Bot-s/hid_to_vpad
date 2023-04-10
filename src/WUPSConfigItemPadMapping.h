@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-#include <wups.h>
 #include <controller_patcher/ControllerPatcher.hpp>
+#include <wups.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,7 +27,7 @@ typedef struct ConfigItemPadMapping {
     char configId[32];
     UController_Type controllerType;
     ControllerMappingPADInfo mappedPadInfo;
-    void* callback;
+    void *callback;
 } ConfigItemPadMapping;
 
 typedef void (*ConfigItemPadMappingChangedCallback)(ConfigItemPadMapping *);
