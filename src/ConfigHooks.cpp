@@ -23,7 +23,7 @@
 #include "utils/StringTools.h"
 #include "WUPSConfigItemPadMapping.h"
 
-int32_t runNetworkClient = true;
+bool runNetworkClient = true;
 
 
 void loadMapping(std::string& persistedValue, UController_Type type);
@@ -31,23 +31,22 @@ void loadMapping(std::string& persistedValue, UController_Type type);
 void ConfigLoad() {
     WUPS_OpenStorage();
 
-    int32_t rumble = 0;
+    bool rumble = 0;
 
-    if(WUPS_GetInt(nullptr, "rumble", &rumble) == WUPS_STORAGE_ERROR_SUCCESS){
+    if(WUPS_GetBool(nullptr, "rumble", &rumble) == WUPS_STORAGE_ERROR_SUCCESS){
         ControllerPatcher::setRumbleActivated(rumble);
     }else{
-        WUPS_StoreInt(nullptr, "rumble", ControllerPatcher::isRumbleActivated());
+        WUPS_StoreBool(nullptr, "rumble", ControllerPatcher::isRumbleActivated());
     }
 
-    if(WUPS_GetInt(nullptr, "networkclient", &runNetworkClient) != WUPS_STORAGE_ERROR_SUCCESS){
-        WUPS_StoreInt(nullptr, "networkclient", runNetworkClient);
+    if(WUPS_GetBool(nullptr, "networkclient", &runNetworkClient) != WUPS_STORAGE_ERROR_SUCCESS){
+        WUPS_StoreBool(nullptr, "networkclient", runNetworkClient);
     }
 
     char buffer[512];
     if(WUPS_GetString(nullptr, "gamepadmapping", buffer, sizeof(buffer)) == WUPS_STORAGE_ERROR_SUCCESS){
-        DEBUG_FUNCTION_LINE("%s", buffer);
-        std::string test = buffer;
-        loadMapping(test, UController_Type_Gamepad);
+        std::string stringWrapper = buffer;
+        loadMapping(stringWrapper, UController_Type_Gamepad);
     }
 
     WUPS_CloseStorage();
@@ -68,11 +67,6 @@ void loadMapping(std::string &persistedValue, UController_Type controllerType){
     mappedPadInfo.vidpid.pid = atoi(result.at(1).c_str());
     mappedPadInfo.pad = atoi(result.at(2).c_str());
     mappedPadInfo.type = CM_Type_Controller; //atoi(result.at(3).c_str());
-
-    DEBUG_FUNCTION_LINE("%d",mappedPadInfo.vidpid.vid);
-    DEBUG_FUNCTION_LINE("%d",mappedPadInfo.vidpid.pid);
-    DEBUG_FUNCTION_LINE("%d",mappedPadInfo.pad);
-    DEBUG_FUNCTION_LINE("%d",mappedPadInfo.type);
 
     ControllerPatcher::resetControllerMapping(controllerType);
     ControllerPatcher::addControllerMapping(controllerType,mappedPadInfo);
@@ -98,7 +92,6 @@ void networkClientChanged(ConfigItemBoolean * item, bool newValue) {
 void PadMappingUpdated(ConfigItemPadMapping * item) {
     if(item->mappedPadInfo.active && item->mappedPadInfo.type == CM_Type_Controller){
         auto res = StringTools::strfmt("%d,%d,%d,%d",item->mappedPadInfo.vidpid.vid,item->mappedPadInfo.vidpid.pid,item->mappedPadInfo.pad,item->mappedPadInfo.type);
-        DEBUG_FUNCTION_LINE("Persist config for %s: %s", item->configId, res.c_str());
         WUPS_StoreString(nullptr, item->configId, res.c_str());
     } else {
         WUPS_StoreString(nullptr, item->configId, "");
@@ -110,6 +103,25 @@ WUPS_CONFIG_CLOSED(){
     WUPS_CloseStorage();
 }
 
+#define CONFIG_AddCategoryByName(config, name, callback) \
+    if (WUPSConfig_AddCategoryByName(config, name, callback) < 0) { \
+        WUPSConfig_Destroy(config); \
+        return 0; \
+    }
+    
+#define CONFIG_Boolean_AddToCategoryEx(category, config_id, display_name, default_value, callback, true_value, false_value) \
+    if (!WUPSConfigItemBoolean_AddToCategoryEx(category, config_id, display_name, default_value, callback, true_value, false_value)) { \
+        WUPSConfig_Destroy(config); \
+        return 0; \
+    }  
+
+#define CONFIG_PadMapping_AddToCategory(category, config_id, display_name, controller_type, callback) \
+    if (!WUPSConfigItemPadMapping_AddToCategory(category, config_id, display_name, controller_type, callback)) { \
+        WUPSConfig_Destroy(config); \
+        return 0; \
+    }
+
+
 WUPS_GET_CONFIG() {
     WUPS_OpenStorage();
 
@@ -117,36 +129,21 @@ WUPS_GET_CONFIG() {
     if (WUPSConfig_Create(&config, "HID to VPAD") < 0) {
         return 0;
     }
+    
+    WUPSConfigCategoryHandle catMapping;
     WUPSConfigCategoryHandle catOther;
-    if (WUPSConfig_AddCategoryByName(config, "Other", &catOther) < 0) {
-        WUPSConfig_Destroy(config);
-        return 0;
-    }
+    
+    CONFIG_AddCategoryByName(config, "Mapping", &catMapping);
+    CONFIG_AddCategoryByName(config, "Other", &catOther);
 
-    // WUPSConfigCategory* catMapping = config->addCategory("Controller Mapping");
+    CONFIG_Boolean_AddToCategoryEx(catOther, "rumble", "Rumble", ControllerPatcher::isRumbleActivated(), &rumbleChanged, "On", "Off");
+    CONFIG_Boolean_AddToCategoryEx(catOther, "networkclient", "Network Client", runNetworkClient, &networkClientChanged, "On", "Off");
 
-    if (!WUPSConfigItemBoolean_AddToCategoryEx(catOther, "rumble", "Rumble", ControllerPatcher::isRumbleActivated(), &rumbleChanged, "On", "Off")) {
-        WUPSConfig_Destroy(config);
-        return 0;
-    }
-
-    if (!WUPSConfigItemBoolean_AddToCategoryEx(catOther, "networkclient", "Network Client", runNetworkClient, &networkClientChanged, "On", "Off")) {
-        WUPSConfig_Destroy(config);
-        return 0;
-    }
-
-    if (!WUPSConfigItemPadMapping_AddToCategory(catOther, "gamepadmapping", "Gamepad", UController_Type_Gamepad, &PadMappingUpdated)) {
-        WUPSConfig_Destroy(config);
-        return 0;
-    }
-
-    /*
-        catMapping->addItem(new WUPSConfigItemPadMapping("gamepadmapping",   "Gamepad",    UController_Type_Gamepad));
-        catMapping->addItem(new WUPSConfigItemPadMapping("propad1mapping",   "Pro Controller 1",    UController_Type_Pro1));
-        catMapping->addItem(new WUPSConfigItemPadMapping("propad2mapping",   "Pro Controller 2",    UController_Type_Pro2));
-        catMapping->addItem(new WUPSConfigItemPadMapping("propad3mapping",   "Pro Controller 3",    UController_Type_Pro3));
-        catMapping->addItem(new WUPSConfigItemPadMapping("propad4mapping",   "Pro Controller 4",    UController_Type_Pro4));
-    */
+    CONFIG_PadMapping_AddToCategory(catMapping, "gamepadmapping", "Gamepad", UController_Type_Gamepad, &PadMappingUpdated);
+    CONFIG_PadMapping_AddToCategory(catMapping, "gamepadmapping", "Pro Controller 1", UController_Type_Pro1, &PadMappingUpdated);
+    CONFIG_PadMapping_AddToCategory(catMapping, "gamepadmapping", "Pro Controller 2", UController_Type_Pro2, &PadMappingUpdated);
+    CONFIG_PadMapping_AddToCategory(catMapping, "gamepadmapping", "Pro Controller 3", UController_Type_Pro3, &PadMappingUpdated);
+    CONFIG_PadMapping_AddToCategory(catMapping, "gamepadmapping", "Pro Controller 4", UController_Type_Pro4, &PadMappingUpdated);
 
     return config;
 }
