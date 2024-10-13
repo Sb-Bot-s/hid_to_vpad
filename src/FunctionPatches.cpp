@@ -16,10 +16,18 @@
  ****************************************************************************/
 #include <wups.h>
 
+#include "utils/logger.h"
 #include <controller_patcher/ControllerPatcher.hpp>
+#include <coreinit/cache.h>
+#include <coreinit/debug.h>
+#include <coreinit/thread.h>
 
+extern bool gConfigMenuOpen;
 DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buffer_size, VPADReadError *error) {
     int32_t result = real_VPADRead(chan, buffer, buffer_size, error);
+    if (gConfigMenuOpen) {
+        return result;
+    }
     //A keyboard only sends data when the state changes. We force it to call the sampling callback on each frame!
     ControllerPatcher::sampleKeyboardData();
 
@@ -51,7 +59,14 @@ DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buf
     return result;
 }
 
+DECL_FUNCTION(void, WPADInit) {
+    real_WPADInit();
+    ControllerPatcher::UpdateSamplingFunctionAddress();
+}
 DECL_FUNCTION(int32_t, WPADProbe, WPADChan chan, uint32_t *result) {
+    if (gConfigMenuOpen) {
+        return real_WPADProbe(chan, result);
+    }
     if ((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
         (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
         (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
@@ -66,7 +81,7 @@ DECL_FUNCTION(int32_t, WPADProbe, WPADChan chan, uint32_t *result) {
 }
 
 DECL_FUNCTION(WPADConnectCallback, WPADSetConnectCallback, WPADChan chan, WPADConnectCallback callback) {
-    //log_printf("WPADSetConnectCallback chan %d %08X",chan,callback);
+    DEBUG_FUNCTION_LINE("WPADSetConnectCallback chan %d %08X", chan, callback);
 
     ControllerPatcher::setWPADConnectCallback(chan, callback);
 
@@ -75,14 +90,14 @@ DECL_FUNCTION(WPADConnectCallback, WPADSetConnectCallback, WPADChan chan, WPADCo
         (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
         (chan == WPAD_CHAN_3 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro4))) {
         if (callback != nullptr) {
-            callback(chan, 0);
+            //callback(chan, 0);
         }
     }
     return real_WPADSetConnectCallback(chan, callback);
 }
 
 DECL_FUNCTION(WPADExtensionCallback, WPADSetExtensionCallback, WPADChan chan, WPADExtensionCallback callback) {
-    //log_printf("WPADSetExtensionCallback chan %d %08X",chan,callback);
+    DEBUG_FUNCTION_LINE("WPADSetExtensionCallback chan %d %08X", chan, callback);
 
     ControllerPatcher::setKPADExtensionCallback(chan, callback);
 
@@ -91,14 +106,14 @@ DECL_FUNCTION(WPADExtensionCallback, WPADSetExtensionCallback, WPADChan chan, WP
         (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
         (chan == WPAD_CHAN_3 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro4))) {
         if (callback != nullptr) {
-            callback(chan, WPAD_EXT_PRO_CONTROLLER);
+            //callback(chan, WPAD_EXT_PRO_CONTROLLER);
         }
     }
     return real_WPADSetExtensionCallback(chan, callback);
 }
 
 DECL_FUNCTION(WPADConnectCallback, KPADSetConnectCallback, WPADChan chan, WPADConnectCallback callback) {
-    //log_printf("KPADSetConnectCallback chan %d %08X",chan,callback);
+    DEBUG_FUNCTION_LINE("KPADSetConnectCallback chan %d %08X", chan, callback);
 
     ControllerPatcher::setKPADConnectedCallback(chan, callback);
 
@@ -107,7 +122,7 @@ DECL_FUNCTION(WPADConnectCallback, KPADSetConnectCallback, WPADChan chan, WPADCo
         (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
         (chan == WPAD_CHAN_3 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro4))) {
         if (callback != nullptr) {
-            callback(chan, 0);
+            //callback(chan, 0);
         }
     }
     return real_KPADSetConnectCallback(chan, callback);
@@ -127,7 +142,6 @@ DECL_FUNCTION(uint8_t, WPADGetBatteryLevel, WPADChan chan) {
 
 //In case a game relies on this...
 DECL_FUNCTION(uint32_t, WPADGetDataFormat, WPADChan chan) {
-    //log_printf("WPADGetDataFormat chan: %d result: %d",chan,result);
     if ((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
         (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
         (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
@@ -151,6 +165,11 @@ DECL_FUNCTION(int32_t, WPADSetDataFormat, WPADChan chan, WPADDataFormat fmt) {
 }
 
 DECL_FUNCTION(void, WPADRead, WPADChan chan, WPADStatusProController *data) {
+    if (gConfigMenuOpen) {
+        real_WPADRead(chan, data);
+        return;
+    }
+
     if ((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
         (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
         (chan == WPAD_CHAN_2 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro3)) ||
@@ -162,6 +181,10 @@ DECL_FUNCTION(void, WPADRead, WPADChan chan, WPADStatusProController *data) {
 }
 
 DECL_FUNCTION(void, WPADControlMotor, WPADChan chan, uint32_t status) {
+    if (gConfigMenuOpen) {
+        real_WPADControlMotor(chan, status);
+        return;
+    }
     if (chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) {
         ControllerPatcher::setRumble(UController_Type_Pro1, status);
     } else if (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) {
@@ -184,3 +207,4 @@ WUPS_MUST_REPLACE(WPADGetDataFormat, WUPS_LOADER_LIBRARY_PADSCORE, WPADGetDataFo
 WUPS_MUST_REPLACE(WPADSetDataFormat, WUPS_LOADER_LIBRARY_PADSCORE, WPADSetDataFormat);
 WUPS_MUST_REPLACE(WPADControlMotor, WUPS_LOADER_LIBRARY_PADSCORE, WPADControlMotor);
 WUPS_MUST_REPLACE(WPADProbe, WUPS_LOADER_LIBRARY_PADSCORE, WPADProbe);
+WUPS_MUST_REPLACE(WPADInit, WUPS_LOADER_LIBRARY_PADSCORE, WPADInit);

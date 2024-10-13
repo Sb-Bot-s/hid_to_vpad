@@ -17,6 +17,7 @@
 
 #include "WUPSConfigItemPadMapping.h"
 #include <controller_patcher/ControllerPatcher.hpp>
+#include <coreinit/debug.h>
 #include <padscore/wpad.h>
 #include <stdio.h>
 #include <string.h>
@@ -58,57 +59,26 @@ bool updatePadInfo(ConfigItemPadMapping *item) {
     return false;
 }
 
-int32_t WUPSConfigItemPadMapping_getCurrentValueDisplay(void *context, char *out_buf, int32_t out_size) {
-    auto *item = (ConfigItemPadMapping *) context;
-    if (!updatePadInfo(item)) {
-        snprintf(out_buf, out_size, "No Device");
-        return 0;
-    }
-    std::string name;
-    std::string isConnectedString = "attached";
-
-    if (!ControllerPatcher::isControllerConnectedAndActive(item->controllerType)) {
-        isConnectedString = "detached";
-    }
-
-    ControllerMappingPADInfo *info = &item->mappedPadInfo;
-
-    if (info->type == CM_Type_Controller) {
-        std::string titleString         = ControllerPatcher::getIdentifierByVIDPID(info->vidpid.vid, info->vidpid.pid);
-        std::vector<std::string> result = StringTools::stringSplit(titleString, "\n");
-        if (result.size() == 1) {
-            name = titleString;
-        } else if (result.size() == 2) {
-            name = StringTools::strfmt("0x%04X / 0x%04X(%d) %s", info->vidpid.vid, info->vidpid.pid, info->pad, isConnectedString.c_str());
-        }
-    } else if (info->type == CM_Type_RealController) {
-        // currently this case can't happen.
-        name = "Real (Pro) Controller";
-    } else if (info->type == CM_Type_Mouse || info->type == CM_Type_Keyboard) {
-        // currently this case can't happen.
-        name = "Mouse / Keyboard";
-    }
-
-    strncpy(out_buf, name.c_str(), out_size);
-
-    return 0;
-}
 
 void checkForInput(ConfigItemPadMapping *item) {
     int32_t inputsize = gHIDMaxDevices;
     auto *hiddata     = (InputData *) malloc(sizeof(InputData) * inputsize);
     memset(hiddata, 0, sizeof(InputData) * inputsize);
 
-    ControllerMappingPADInfo pad_result;
-    memset(&pad_result, 0, sizeof(ControllerMappingPADInfo));
-    bool gotPress = false;
+    ControllerMappingPADInfo pad_result = {};
+    bool gotPress                       = false;
 
-    VPADStatus vpad_data;
+    VPADStatus vpad_data = {};
     VPADReadError error;
 
+    bool unmap = false;
     while (!gotPress) {
         real_VPADRead(VPAD_CHAN_0, &vpad_data, 1, &error);
         if (error != VPAD_READ_SUCCESS) {
+            if (vpad_data.hold == VPAD_BUTTON_X || vpad_data.hold == VPAD_BUTTON_HOME) {
+                unmap = true;
+                break;
+            }
             if (vpad_data.hold == VPAD_BUTTON_B || vpad_data.hold == VPAD_BUTTON_HOME) {
                 break;
             }
@@ -116,12 +86,9 @@ void checkForInput(ConfigItemPadMapping *item) {
 
         int32_t result = ControllerPatcher::gettingInputAllDevices(hiddata, inputsize);
         if (result > 0) {
-            //log_printf("got %d results",result);
             for (int32_t i = 0; i < result; i++) {
                 for (int32_t j = 0; j < HID_MAX_PADS_COUNT; j++) {
-                    //log_printf("check pad %d. %08X",j,hiddata[i].button_data[j].btn_h);
                     if (hiddata[i].button_data[j].btn_h != 0) {
-                        //log_printf("It pressed a buttons!",result);
                         pad_result.pad        = j;
                         pad_result.vidpid.vid = hiddata[i].device_info.vidpid.vid;
                         pad_result.vidpid.pid = hiddata[i].device_info.vidpid.pid;
@@ -129,7 +96,7 @@ void checkForInput(ConfigItemPadMapping *item) {
                         pad_result.type       = hiddata[i].type;
 
                         gotPress = true;
-                        DEBUG_FUNCTION_LINE("%04X %04X (PAD: %d) pressed a buttons %08X", hiddata[i].device_info.vidpid.vid, hiddata[i].device_info.vidpid.pid, j, hiddata[i].button_data[j].btn_h);
+                        DEBUG_FUNCTION_LINE("%04X %04X (PAD: %d) pressed a buttons %08X", pad_result.vidpid.vid, pad_result.vidpid.pid, pad_result.pad, hiddata[i].button_data[j].btn_h);
                         break;
                     }
                 }
@@ -140,7 +107,12 @@ void checkForInput(ConfigItemPadMapping *item) {
         }
     }
     if (gotPress) {
+        ControllerPatcher::resetControllerMapping(item->controllerType);
         ControllerPatcher::addControllerMapping(item->controllerType, pad_result);
+        updatePadInfo(item);
+        WUPSConfigItemPadMapping_callCallback(item);
+    } else if (unmap) {
+        ControllerPatcher::resetControllerMapping(item->controllerType);
         updatePadInfo(item);
         WUPSConfigItemPadMapping_callCallback(item);
     }
@@ -148,13 +120,62 @@ void checkForInput(ConfigItemPadMapping *item) {
     free(hiddata);
 }
 
+static std::string GetDeviceName(ConfigItemPadMapping *item) {
+    if (!updatePadInfo(item)) {
+        return "No Device";
+    }
+
+    std::string name;
+    std::string isConnectedString = "attached";
+
+    if (!ControllerPatcher::isControllerConnectedAndActive(item->controllerType)) {
+        isConnectedString = "detached";
+    }
+
+    ControllerMappingPADInfo *info = &item->mappedPadInfo;
+
+    if (info->type == CM_Type_Controller) {
+        std::string titleString = ControllerPatcher::getIdentifierByVIDPID(info->vidpid.vid, info->vidpid.pid);
+        name                    = StringTools::strfmt("%s (%d) %s", titleString.c_str(), info->pad, isConnectedString.c_str());
+    } else if (info->type == CM_Type_RealController) {
+        // currently this case can't happen.
+        name = "Real (Pro) Controller";
+    } else if (info->type == CM_Type_Mouse || info->type == CM_Type_Keyboard) {
+        // currently this case can't happen.
+        name = "Mouse / Keyboard";
+    }
+    return name;
+}
+
+int32_t WUPSConfigItemPadMapping_getCurrentValueDisplaySelected(void *context, char *out_buf, int32_t out_size) {
+    auto *item = (ConfigItemPadMapping *) context;
+    if (item->state == CONFIG_ITEM_PAD_MAPPING_PREPARE_FOR_HOLD || item->state == CONFIG_ITEM_PAD_MAPPING_WAIT_FOR_HOLD) {
+        if (item->state == CONFIG_ITEM_PAD_MAPPING_PREPARE_FOR_HOLD) {
+            item->state = CONFIG_ITEM_PAD_MAPPING_WAIT_FOR_HOLD;
+            snprintf(out_buf, out_size, "<Waiting for input on HID> (\ue001: Abort, \ue002 Reset)");
+            return 0;
+        } else {
+            checkForInput(item);
+            item->state = CONFIG_ITEM_PAD_MAPPING_STATE_NONE;
+        }
+    }
+    snprintf(out_buf, out_size, "> %s", GetDeviceName(item).c_str());
+    return 0;
+}
+
+int32_t WUPSConfigItemPadMapping_getCurrentValueDisplay(void *context, char *out_buf, int32_t out_size) {
+    auto *item       = (ConfigItemPadMapping *) context;
+    std::string name = GetDeviceName(item);
+    snprintf(out_buf, out_size, " %s", GetDeviceName(item).c_str());
+    return 0;
+}
+
 void WUPSConfigItemPadMapping_onButtonPressed(void *context, WUPSConfigButtons buttons) {
     auto *item = (ConfigItemPadMapping *) context;
-    if (buttons & WUPS_CONFIG_BUTTON_A) {
-        // Lets remove the old mapping.
-        ControllerPatcher::resetControllerMapping(item->controllerType);
-
-        checkForInput(item);
+    if (item->state == CONFIG_ITEM_PAD_MAPPING_STATE_NONE) {
+        if ((buttons & WUPS_CONFIG_BUTTON_A) == WUPS_CONFIG_BUTTON_A) {
+            item->state = CONFIG_ITEM_PAD_MAPPING_PREPARE_FOR_HOLD;
+        }
     }
 }
 
@@ -162,11 +183,19 @@ bool WUPSConfigItemPadMapping_isMovementAllowed(void *context) {
     return true;
 }
 
+
+void WUPSConfigItemPadMapping_onSelected(void *context, bool isSelected) {
+}
+
+
 void WUPSConfigItemPadMapping_onDelete(void *context) {
     auto *item = (ConfigItemPadMapping *) context;
-
+    if (item->configId) {
+        free(item->configId);
+    }
     free(item);
 }
+
 
 extern "C" bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle cat, const char *configID, const char *displayName, UController_Type controllerType, ConfigItemPadMappingChangedCallback callback) {
     if (cat == 0 || displayName == nullptr) {
@@ -174,21 +203,28 @@ extern "C" bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle 
     }
     auto *item = (ConfigItemPadMapping *) malloc(sizeof(ConfigItemPadMapping));
     if (item == nullptr) {
+        OSReport("WUPSConfigItemPadMapping_AddToCategory: Failed to allocate memory for item data.\n");
         return false;
     }
 
-    strncpy(item->configId, configID, sizeof(item->configId));
+    if (configID != nullptr) {
+        item->configId = strdup(configID);
+    } else {
+        item->configId = nullptr;
+    }
+
     item->controllerType = controllerType;
     item->callback       = (void *) callback;
+    item->state          = CONFIG_ITEM_PAD_MAPPING_STATE_NONE;
     memset(&item->mappedPadInfo, 0, sizeof(item->mappedPadInfo));
 
     WUPSConfigCallbacks_t callbacks = {
             .getCurrentValueDisplay         = &WUPSConfigItemPadMapping_getCurrentValueDisplay,
-            .getCurrentValueSelectedDisplay = &WUPSConfigItemPadMapping_getCurrentValueDisplay,
-            .onSelected                     = nullptr,
+            .getCurrentValueSelectedDisplay = &WUPSConfigItemPadMapping_getCurrentValueDisplaySelected,
+            .onSelected                     = &WUPSConfigItemPadMapping_onSelected,
             .restoreDefault                 = &restoreDefault,
             .isMovementAllowed              = &WUPSConfigItemPadMapping_isMovementAllowed,
-            .callCallback                   = nullptr,
+            .callCallback                   = &WUPSConfigItemPadMapping_callCallback,
             .onButtonPressed                = &WUPSConfigItemPadMapping_onButtonPressed,
             .onDelete                       = &WUPSConfigItemPadMapping_onDelete};
 

@@ -21,26 +21,25 @@
 #include <cstring>
 #include <utils/logger.h>
 
-
-WUPS_PLUGIN_NAME("HID to VPAD lite");
+WUPS_PLUGIN_NAME("HID to VPAD");
 WUPS_PLUGIN_DESCRIPTION("Enables HID devices as controllers on your Wii U");
-WUPS_PLUGIN_VERSION("v1.0");
+WUPS_PLUGIN_VERSION("0.1.1-alpha");
 WUPS_PLUGIN_AUTHOR("Maschell");
 WUPS_PLUGIN_LICENSE("GPL");
 
 WUPS_USE_WUT_DEVOPTAB();
 WUPS_USE_STORAGE("hid_to_vpad");
 
-#define SD_PATH                          "fs:/vol/external01"
-#define WIIU_PATH                        "/wiiu"
-#define DEFAULT_HID_TO_VPAD_PATH         SD_PATH WIIU_PATH "/apps/hidtovpad"
-#define DEFAULT_CONTROLLER_PATCHER_PATCH SD_PATH WIIU_PATH "/controller"
-
 extern int32_t runNetworkClient;
+
+#define SD_PATH                          "fs:/vol/external01"
+#define WIIU_PATH                         "/wiiu"
+#define DEFAULT_CONTROLLER_PATCHER_PATCH SD_PATH WIIU_PATH "/controller"
 
 void ConfigLoad();
 ON_APPLICATION_START() {
     WHBLogUdpInit();
+    WHBLogCafeInit();
 
     DEBUG_FUNCTION_LINE("Initializing the controller data");
     ControllerPatcher::Init(DEFAULT_CONTROLLER_PATCHER_PATCH);
@@ -60,7 +59,6 @@ INITIALIZE_PLUGIN() {
 }
 
 DEINITIALIZE_PLUGIN() {
-    //CursorDrawer::destroyInstance();
     ControllerPatcher::DeInit();
     ControllerPatcher::stopNetworkServer();
 }

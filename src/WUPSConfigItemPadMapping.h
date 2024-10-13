@@ -22,10 +22,18 @@
 extern "C" {
 #endif
 
+
+typedef enum ConfigItemPadMappingState {
+    CONFIG_ITEM_PAD_MAPPING_STATE_NONE,
+    CONFIG_ITEM_PAD_MAPPING_PREPARE_FOR_HOLD,
+    CONFIG_ITEM_PAD_MAPPING_WAIT_FOR_HOLD,
+} ConfigItemPadMappingState;
+
 typedef struct ConfigItemPadMapping {
+    char *configId;
     WUPSConfigItemHandle handle;
-    char configId[32];
     UController_Type controllerType;
+    ConfigItemPadMappingState state;
     ControllerMappingPADInfo mappedPadInfo;
     void *callback;
 } ConfigItemPadMapping;
