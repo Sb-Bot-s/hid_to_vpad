@@ -98,7 +98,7 @@ DECL_FUNCTION(WPADConnectCallback, WPADSetConnectCallback, WPADChan chan, WPADCo
 DECL_FUNCTION(WPADExtensionCallback, WPADSetExtensionCallback, WPADChan chan, WPADExtensionCallback callback) {
     DEBUG_FUNCTION_LINE("WPADSetExtensionCallback chan %d %08X", chan, callback);
 
-    ControllerPatcher::setKPADExtensionCallback(chan, callback);
+    ControllerPatcher::setKPADExtensionCallback(chan, reinterpret_cast<WPADConnectCallback>(callback));
 
     if ((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
         (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
