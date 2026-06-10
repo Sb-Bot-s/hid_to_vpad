@@ -66,6 +66,8 @@ Install them (in this order) according to their README's. Don't forget the depen
 
 ## Building via docker
 
+The Dockerfile intentionally uses the current `ghcr.io/wiiu-env/devkitppc:20260225` base and `ghcr.io/wiiu-env/wiiupluginsystem:20260418` artifacts. These include the WUPS 0.9.1+ build changes required by Aroma Beta 26 and newer; older WUPS/devkitPPC builds can be rejected by recent Aroma versions or cause loader instability.
+
 ```
 # Build docker image (only needed once)
 docker build . -t hid-to-vpad-plugin-builder
