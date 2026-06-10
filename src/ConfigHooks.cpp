@@ -21,8 +21,8 @@
 #include <controller_patcher/ControllerPatcher.hpp>
 #include <coreinit/debug.h>
 #include <wups.h>
-#include <wups/config_api.h>
 #include <wups/config/WUPSConfigItemBoolean.h>
+#include <wups/config_api.h>
 #include <wups/storage.h>
 
 bool runNetworkClient = true;
@@ -130,9 +130,9 @@ static bool CreateCategory(const char *name, WUPSConfigCategoryHandle *outCatego
     return WUPSConfigAPI_Category_Create(options, outCategory) == WUPSCONFIG_API_RESULT_SUCCESS;
 }
 
-#define CONFIG_PadMapping_AddToCategory(category, config_id, display_name, controller_type, callback) \
+#define CONFIG_PadMapping_AddToCategory(category, config_id, display_name, controller_type, callback)            \
     if (!WUPSConfigItemPadMapping_AddToCategory(category, config_id, display_name, controller_type, callback)) { \
-        return WUPSCONFIG_API_CALLBACK_RESULT_ERROR; \
+        return WUPSCONFIG_API_CALLBACK_RESULT_ERROR;                                                             \
     }
 
 WUPSConfigAPICallbackStatus ConfigMenuOpenedCallback(WUPSConfigCategoryHandle rootHandle) {
