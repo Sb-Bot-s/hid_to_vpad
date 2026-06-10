@@ -61,7 +61,6 @@ DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buf
 
 DECL_FUNCTION(void, WPADInit) {
     real_WPADInit();
-    ControllerPatcher::UpdateSamplingFunctionAddress();
 }
 DECL_FUNCTION(int32_t, WPADProbe, WPADChan chan, uint32_t *result) {
     if (gConfigMenuOpen) {

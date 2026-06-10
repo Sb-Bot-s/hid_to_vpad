@@ -33,7 +33,7 @@ WUPS_USE_STORAGE("hid_to_vpad");
 extern int32_t runNetworkClient;
 
 #define SD_PATH                          "fs:/vol/external01"
-#define WIIU_PATH                         "/wiiu"
+#define WIIU_PATH                        "/wiiu"
 #define DEFAULT_CONTROLLER_PATCHER_PATCH SD_PATH WIIU_PATH "/controller"
 
 void ConfigLoad();
