@@ -39,6 +39,7 @@ void ApplyNetworkServerState();
 #define DEFAULT_CONTROLLER_PATCHER_PATCH SD_PATH WIIU_PATH "/controller"
 
 void ConfigLoad();
+void InitConfigMenu();
 ON_APPLICATION_START() {
     WHBLogUdpInit();
     WHBLogCafeInit();
@@ -55,6 +56,7 @@ ON_APPLICATION_START() {
 
 INITIALIZE_PLUGIN() {
     WHBLogUdpInit();
+    InitConfigMenu();
 }
 
 DEINITIALIZE_PLUGIN() {
