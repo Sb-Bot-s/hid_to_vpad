@@ -39,6 +39,10 @@ bool WUPSConfigItemPadMapping_callCallback(void *context) {
     return false;
 }
 
+void WUPSConfigItemPadMapping_onCloseCallback(void *context) {
+    WUPSConfigItemPadMapping_callCallback(context);
+}
+
 void restoreDefault(void *context) {
     auto *item = (ConfigItemPadMapping *) context;
     memset(&item->mappedPadInfo, 0, sizeof(item->mappedPadInfo));
@@ -170,10 +174,10 @@ int32_t WUPSConfigItemPadMapping_getCurrentValueDisplay(void *context, char *out
     return 0;
 }
 
-void WUPSConfigItemPadMapping_onButtonPressed(void *context, WUPSConfigButtons buttons) {
+void WUPSConfigItemPadMapping_onInput(void *context, WUPSConfigSimplePadData input) {
     auto *item = (ConfigItemPadMapping *) context;
     if (item->state == CONFIG_ITEM_PAD_MAPPING_STATE_NONE) {
-        if ((buttons & WUPS_CONFIG_BUTTON_A) == WUPS_CONFIG_BUTTON_A) {
+        if ((input.buttons_d & WUPS_CONFIG_BUTTON_A) == WUPS_CONFIG_BUTTON_A) {
             item->state = CONFIG_ITEM_PAD_MAPPING_PREPARE_FOR_HOLD;
         }
     }
@@ -198,7 +202,7 @@ void WUPSConfigItemPadMapping_onDelete(void *context) {
 
 
 extern "C" bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle cat, const char *configID, const char *displayName, UController_Type controllerType, ConfigItemPadMappingChangedCallback callback) {
-    if (cat == 0 || displayName == nullptr) {
+    if (cat.handle == nullptr || displayName == nullptr) {
         return false;
     }
     auto *item = (ConfigItemPadMapping *) malloc(sizeof(ConfigItemPadMapping));
@@ -218,22 +222,29 @@ extern "C" bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle 
     item->state          = CONFIG_ITEM_PAD_MAPPING_STATE_NONE;
     memset(&item->mappedPadInfo, 0, sizeof(item->mappedPadInfo));
 
-    WUPSConfigCallbacks_t callbacks = {
+    WUPSConfigAPIItemCallbacksV2 callbacks = {
             .getCurrentValueDisplay         = &WUPSConfigItemPadMapping_getCurrentValueDisplay,
             .getCurrentValueSelectedDisplay = &WUPSConfigItemPadMapping_getCurrentValueDisplaySelected,
             .onSelected                     = &WUPSConfigItemPadMapping_onSelected,
             .restoreDefault                 = &restoreDefault,
             .isMovementAllowed              = &WUPSConfigItemPadMapping_isMovementAllowed,
-            .callCallback                   = &WUPSConfigItemPadMapping_callCallback,
-            .onButtonPressed                = &WUPSConfigItemPadMapping_onButtonPressed,
+            .onCloseCallback                = &WUPSConfigItemPadMapping_onCloseCallback,
+            .onInput                        = &WUPSConfigItemPadMapping_onInput,
+            .onInputEx                      = nullptr,
             .onDelete                       = &WUPSConfigItemPadMapping_onDelete};
 
-    if (WUPSConfigItem_Create(&item->handle, configID, displayName, callbacks, item) < 0) {
+    WUPSConfigAPIItemOptionsV2 options = {
+            .displayName = displayName,
+            .context     = item,
+            .callbacks   = callbacks};
+
+    if (WUPSConfigAPI_Item_Create(options, &item->handle) != WUPSCONFIG_API_RESULT_SUCCESS) {
         free(item);
         return false;
     }
 
-    if (WUPSConfigCategory_AddItem(cat, item->handle) < 0) {
+    if (WUPSConfigAPI_Category_AddItem(cat, item->handle) != WUPSCONFIG_API_RESULT_SUCCESS) {
+        WUPSConfigAPI_Item_Destroy(item->handle);
         return false;
     }
     return true;

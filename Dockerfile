@@ -1,6 +1,8 @@
-FROM wiiuenv/devkitppc:20200810
+# Aroma Beta 26+ rejects plugins built with the old devkitPPC/WUPS heap layout.
+# Keep the build image aligned with projects already updated for WUPS 0.9.1+.
+FROM ghcr.io/wiiu-env/devkitppc:20260225
 
-COPY --from=wiiuenv/wiiupluginsystem:20230225 /artifacts $DEVKITPRO
-COPY --from=wiiuenv/controller_patcher:20201216 /artifacts $DEVKITPRO
+COPY --from=ghcr.io/wiiu-env/wiiupluginsystem:20260418 /artifacts $DEVKITPRO
+COPY --from=ghcr.io/wiiu-env/controller_patcher:20201216 /artifacts $DEVKITPRO
 
-WORKDIR project
+WORKDIR /project
