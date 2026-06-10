@@ -18,10 +18,10 @@
 
 #include "utils/logger.h"
 #include <controller_patcher/ControllerPatcher.hpp>
-#include <cstdint>
 #include <coreinit/cache.h>
 #include <coreinit/debug.h>
 #include <coreinit/thread.h>
+#include <cstdint>
 
 extern bool gConfigMenuOpen;
 DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buffer_size, VPADReadError *error) {
