@@ -35,6 +35,8 @@ jobs:
   deploy-binary:
     needs: build-binary
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:   
     - name: Get environment variables
       id: get_repository_name
