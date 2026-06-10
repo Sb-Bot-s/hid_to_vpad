@@ -30,7 +30,9 @@ WUPS_PLUGIN_LICENSE("GPL");
 WUPS_USE_WUT_DEVOPTAB();
 WUPS_USE_STORAGE("hid_to_vpad");
 
-extern int32_t runNetworkClient;
+extern bool runNetworkClient;
+
+void ApplyNetworkServerState();
 
 #define SD_PATH                          "fs:/vol/external01"
 #define WIIU_PATH                        "/wiiu"
@@ -47,10 +49,7 @@ ON_APPLICATION_START() {
 
     ConfigLoad();
 
-    if (runNetworkClient) {
-        DEBUG_FUNCTION_LINE("Starting HID to VPAD network server");
-        ControllerPatcher::startNetworkServer();
-    }
+    ApplyNetworkServerState();
     ControllerPatcher::disableWiiUEnergySetting();
 }
 

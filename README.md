@@ -82,3 +82,48 @@ docker run -it --rm -v ${PWD}:/project hid-to-vpad-plugin-builder make clean
 - A big thanks goes out to <b>dimok</b> for creating the HBL, the dynamic libs and every stuff he made. The "environment" of this app is copied from ddd, turned out to be a "hello world" with useful extra stuff.  
 - Also huge thanks to <b>FIX94</b> who initally created his gc-to-vpad. Helped me a lot! Thanks!  
 - And of course big thanks to everyone who has helped me testing! (dimok, dibas, EclipseSin,FunThomas,n1ghty etc.)  
+
+## Python keyboard network client (experimental)
+
+This branch adds a lightweight network path for testing input without the Java Network Client and without a physical XInput controller.  The Wii U side still uses the existing HID to VPAD network server, but the client is now a plain Python script that can run on Linux, macOS, Windows terminals, or Android through Termux.
+
+### Wii U setup
+
+1. Keep **Network Input Server** enabled in the WUPS configuration menu. It defaults to **On** and is started automatically when the plugin initializes.
+2. Copy the virtual keyboard config to the SD card:
+
+```sh
+cp controller_configs/python_keyboard_xinput.ini sd:/wiiu/controller/
+```
+
+The config uses VID `0x7331` and PID `0x1337`. Those values match the compact report format emitted by the Python client; no physical XInput pad is required.
+
+### Running the Python client
+
+From the computer or Android/Termux device on the same network as the Wii U:
+
+```sh
+python3 tools/hid_to_vpad_keyboard_client.py <WII_U_IP_ADDRESS>
+```
+
+Default keyboard mapping:
+
+- `W`, `A`, `S`, `D`: left stick
+- Arrow keys: right stick
+- `Space`: A
+- `J`: B
+- `K`: X
+- `L`: Y
+- `U` / `I`: L / R
+- `Q`: Minus
+- `E` or Enter: Plus
+- `H`: Home
+- `Ctrl+C`: disconnect
+
+Terminals do not expose real key-release events, so the script keeps each key active for a short repeat window (`--hold`, default `0.18` seconds). If movement feels too sticky or too short, tune it, for example:
+
+```sh
+python3 tools/hid_to_vpad_keyboard_client.py <WII_U_IP_ADDRESS> --hold 0.12 --rate 60
+```
+
+This first step is meant to prove extended connectivity from Wii U to a reproducible Python client. It is intentionally small so it can later be replaced or reused by an Android touch/gamepad front end.

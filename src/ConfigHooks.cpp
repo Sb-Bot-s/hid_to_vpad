@@ -25,6 +25,16 @@
 
 bool runNetworkClient = true;
 
+void ApplyNetworkServerState() {
+    ControllerPatcher::setNetworkControllerActivated(runNetworkClient);
+    if (runNetworkClient) {
+        DEBUG_FUNCTION_LINE("Starting HID to VPAD network input server");
+        ControllerPatcher::startNetworkServer();
+    } else {
+        DEBUG_FUNCTION_LINE("Stopping HID to VPAD network input server");
+        ControllerPatcher::stopNetworkServer();
+    }
+}
 
 void loadMapping(const std::string &persistedValue, UController_Type type);
 
@@ -96,14 +106,10 @@ void rumbleChanged(ConfigItemBoolean *item, bool newValue) {
 }
 
 void networkClientChanged(ConfigItemBoolean *item, bool newValue) {
-    DEBUG_FUNCTION_LINE("Trigger network %d", newValue);
-    ControllerPatcher::setNetworkControllerActivated(newValue);
-    if (newValue) {
-        ControllerPatcher::startNetworkServer();
-    } else {
-        ControllerPatcher::stopNetworkServer();
-    }
-    WUPS_StoreInt(nullptr, "networkclient", newValue);
+    DEBUG_FUNCTION_LINE("Trigger network input server %d", newValue);
+    runNetworkClient = newValue;
+    ApplyNetworkServerState();
+    WUPS_StoreBool(nullptr, "networkclient", newValue);
 }
 
 void PadMappingUpdated(ConfigItemPadMapping *item) {
@@ -145,7 +151,7 @@ WUPS_GET_CONFIG() {
     WUPSConfig_AddCategoryByNameHandled(config, "Mapping", &catMapping);
     WUPSConfig_AddCategoryByNameHandled(config, "Other", &catOther);
     WUPSConfigItemBoolean_AddToCategoryHandledEx(config, catOther, "rumble", "Rumble", ControllerPatcher::isRumbleActivated(), &rumbleChanged, "On", "Off");
-    WUPSConfigItemBoolean_AddToCategoryHandledEx(config, catOther, "networkclient", "Network Client", runNetworkClient, &networkClientChanged, "On", "Off");
+    WUPSConfigItemBoolean_AddToCategoryHandledEx(config, catOther, "networkclient", "Network Input Server", runNetworkClient, &networkClientChanged, "On", "Off");
 
     CONFIG_PadMapping_AddToCategory(config, catMapping, "gamepadmapping", "Gamepad", UController_Type_Gamepad, &PadMappingUpdated);
     CONFIG_PadMapping_AddToCategory(config, catMapping, "pro1", "Pro Controller 1", UController_Type_Pro1, &PadMappingUpdated);
