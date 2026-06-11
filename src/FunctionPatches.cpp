@@ -21,6 +21,7 @@
 #include <coreinit/cache.h>
 #include <coreinit/debug.h>
 #include <coreinit/thread.h>
+#include <cstdint>
 
 extern bool gConfigMenuOpen;
 DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buffer_size, VPADReadError *error) {
@@ -80,9 +81,7 @@ DECL_FUNCTION(int32_t, WPADProbe, WPADChan chan, uint32_t *result) {
 }
 
 DECL_FUNCTION(WPADConnectCallback, WPADSetConnectCallback, WPADChan chan, WPADConnectCallback callback) {
-    DEBUG_FUNCTION_LINE("WPADSetConnectCallback chan %d %08X", chan, callback);
-
-    ControllerPatcher::setWPADConnectCallback(chan, callback);
+    DEBUG_FUNCTION_LINE("WPADSetConnectCallback chan %d %08X", chan, static_cast<uint32_t>(reinterpret_cast<uintptr_t>(callback)));
 
     if ((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
         (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
@@ -96,9 +95,7 @@ DECL_FUNCTION(WPADConnectCallback, WPADSetConnectCallback, WPADChan chan, WPADCo
 }
 
 DECL_FUNCTION(WPADExtensionCallback, WPADSetExtensionCallback, WPADChan chan, WPADExtensionCallback callback) {
-    DEBUG_FUNCTION_LINE("WPADSetExtensionCallback chan %d %08X", chan, callback);
-
-    ControllerPatcher::setKPADExtensionCallback(chan, reinterpret_cast<WPADConnectCallback>(callback));
+    DEBUG_FUNCTION_LINE("WPADSetExtensionCallback chan %d %08X", chan, static_cast<uint32_t>(reinterpret_cast<uintptr_t>(callback)));
 
     if ((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
         (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
@@ -112,9 +109,7 @@ DECL_FUNCTION(WPADExtensionCallback, WPADSetExtensionCallback, WPADChan chan, WP
 }
 
 DECL_FUNCTION(WPADConnectCallback, KPADSetConnectCallback, WPADChan chan, WPADConnectCallback callback) {
-    DEBUG_FUNCTION_LINE("KPADSetConnectCallback chan %d %08X", chan, callback);
-
-    ControllerPatcher::setKPADConnectedCallback(chan, callback);
+    DEBUG_FUNCTION_LINE("KPADSetConnectCallback chan %d %08X", chan, static_cast<uint32_t>(reinterpret_cast<uintptr_t>(callback)));
 
     if ((chan == WPAD_CHAN_0 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro1)) ||
         (chan == WPAD_CHAN_1 && ControllerPatcher::isControllerConnectedAndActive(UController_Type_Pro2)) ||
