@@ -12,9 +12,15 @@
 #include <cstdio>
 #include <controller_patcher/ControllerPatcher.hpp>
 
-// Forward declaration for notifications (Aroma API)
-extern "C" void NotificationModule_AddErrorNotification(const char* text);
-extern "C" void NotificationModule_AddInfoNotification(const char* text);
+#include <notifications/notifications.h>
+
+static void ShowNotification(const char* text) {
+    NotificationModule_AddInfoNotification(text);
+}
+
+static void ShowError(const char* text) {
+    NotificationModule_AddErrorNotification(text);
+}
 
 #define NETWORK_PORT 8112
 #define UDP_PORT 8113
@@ -69,7 +75,7 @@ static int NetworkThreadEntryPoint(int argc, const char** argv) {
         if (client_socket >= 0) {
             char notificationText[128];
             snprintf(notificationText, sizeof(notificationText), "Client connected: %s", inet_ntoa(client_addr.sin_addr));
-            NotificationModule_AddInfoNotification(notificationText);
+            ShowNotification(notificationText);
             DEBUG_FUNCTION_LINE("Client connected from %s", inet_ntoa(client_addr.sin_addr));
 
             // Handshake
@@ -101,7 +107,7 @@ static int NetworkThreadEntryPoint(int argc, const char** argv) {
             }
 
             close(client_socket);
-            NotificationModule_AddInfoNotification("Client disconnected");
+            ShowNotification("Client disconnected");
             DEBUG_FUNCTION_LINE("Client disconnected");
         }
         OSSleepTicks(OSMillisecondsToTicks(100));
