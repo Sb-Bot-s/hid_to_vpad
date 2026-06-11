@@ -28,9 +28,9 @@ PROTOCOL_ABORT = 0x30
 
 TCP_CMD_ATTACH = 0x01
 TCP_CMD_DETACH = 0x02
+TCP_CMD_INPUT = 0x02
 TCP_CMD_PING = 0xF0
 TCP_CMD_PONG = 0xF1
-UDP_CMD_DATA = 0x03
 
 ATTACH_CONFIG_FOUND = 0xE0
 ATTACH_CONFIG_NOT_FOUND = 0xE1
@@ -191,40 +191,45 @@ def detach_device(sock: Optional[socket.socket], handle: int) -> None:
         pass
 
 
-def send_report(
-    udp_sock: socket.socket,
-    host: str,
-    handle: int,
-    device_slot: int,
-    pad_slot: int,
-    report: bytes,
+def send_input(
+    sock: socket.socket,
+    buttons: int,
+    lx: int,
+    ly: int,
+    rx: int,
+    ry: int,
+    tl: int,
+    tr: int,
 ) -> None:
-    packet = struct.pack(">BBihBB", UDP_CMD_DATA, 1, handle, device_slot, pad_slot, len(report)) + report
-    udp_sock.sendto(packet, (host, UDP_PORT))
+    # ControllerState struct packed: I(4)=buttons, h(2)=lx, h(2)=ly, h(2)=rx, h(2)=ry, B(1)=tl, B(1)=tr
+    # Total 14 bytes
+    data = struct.pack(">IhhhhBB", buttons, lx, ly, rx, ry, tl, tr)
+    packet = struct.pack(">B", TCP_CMD_INPUT) + data
+    sock.sendall(packet)
 
 
 def signed_axis(value: int) -> int:
     return max(-128, min(127, value)) & 0xFF
 
 
-def build_xinput_report(keys: Iterable[str]) -> bytes:
+def build_xinput_state(keys: Iterable[str]) -> tuple[int, int, int, int, int, int, int]:
     active = set(keys)
     
     # Left Stick (WASD)
     lx = 0
     ly = 0
-    if "w" in active: ly += 127
-    if "s" in active: ly -= 128
-    if "a" in active: lx -= 128
-    if "d" in active: lx += 127
+    if "w" in active: ly += 32767
+    if "s" in active: ly -= 32768
+    if "a" in active: lx -= 32768
+    if "d" in active: lx += 32767
     
     # Right Stick (Arrows)
     rx = 0
     ry = 0
-    if "up" in active: ry += 127
-    if "down" in active: ry -= 128
-    if "left" in active: rx -= 128
-    if "right" in active: rx += 127
+    if "up" in active: ry += 32767
+    if "down" in active: ry -= 32768
+    if "left" in active: rx -= 32768
+    if "right" in active: rx += 32767
 
     buttons = 0
     # Map letters to buttons
@@ -249,8 +254,7 @@ def build_xinput_report(keys: Iterable[str]) -> bytes:
         if key in active:
             buttons |= mask
 
-    axes_data = bytes([signed_axis(lx), signed_axis(ly), signed_axis(rx), signed_axis(ry)])
-    return axes_data + struct.pack(">I", buttons)
+    return buttons, lx, ly, rx, ry, 0, 0
 
 
 def stdin_keys() -> Iterable[str]:
@@ -328,8 +332,8 @@ def main() -> int:
                     state.press(key, args.hold)
                 else:
                     state.press(key, args.hold)
-            report = build_xinput_report(state.active_keys())
-            send_report(udp_sock, args.host, args.handle, device_slot, pad_slot, report)
+            buttons, lx, ly, rx, ry, tl, tr = build_xinput_state(state.active_keys())
+            send_input(tcp_sock, buttons, lx, ly, rx, ry, tl, tr)
             time.sleep(frame_time)
     except KeyboardInterrupt:
         print("\nDisconnecting...")

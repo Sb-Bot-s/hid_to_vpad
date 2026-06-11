@@ -16,6 +16,7 @@
  ****************************************************************************/
 #include <wups.h>
 
+#include "ControllerProtocol.h"
 #include "utils/logger.h"
 #include <controller_patcher/ControllerPatcher.hpp>
 #include <coreinit/cache.h>
@@ -37,6 +38,15 @@ DECL_FUNCTION(int32_t, VPADRead, VPADChan chan, VPADStatus *buffer, uint32_t buf
 
     if (ControllerPatcher::areControllersConnected() && buffer_size > 0) {
         ControllerPatcher::setRumble(UController_Type_Gamepad, !!VPADBASEGetMotorOnRemainingCount(VPAD_CHAN_0));
+
+        // Inject network controller state
+        if (lastControllerState.buttons != 0) {
+            buffer[0].hold         = lastControllerState.buttons;
+            buffer[0].leftStick.x  = lastControllerState.stick_l_x;
+            buffer[0].leftStick.y  = lastControllerState.stick_l_y;
+            buffer[0].rightStick.x = lastControllerState.stick_r_x;
+            buffer[0].rightStick.y = lastControllerState.stick_r_y;
+        }
 
         if (ControllerPatcher::setControllerDataFromHID(buffer) == CONTROLLER_PATCHER_ERROR_NONE) {
 
