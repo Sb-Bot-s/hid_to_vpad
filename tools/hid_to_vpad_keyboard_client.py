@@ -111,29 +111,54 @@ def recv_byte(sock: socket.socket) -> int:
 
 def connect_tcp(host: str, timeout: float) -> socket.socket:
     sock = socket.create_connection((host, TCP_PORT), timeout=timeout)
+    # Enable keepalive to prevent timeout disconnects
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+    
     server_version = recv_byte(sock)
+    print(f"[handshake] server version: 0x{server_version:02X}")
     if server_version == PROTOCOL_ABORT:
         raise RuntimeError("Wii U aborted before protocol negotiation")
 
     selected_version = min(server_version, PROTOCOL_V3)
     sock.sendall(bytes([selected_version]))
+    print(f"[handshake] sent version: 0x{selected_version:02X}")
 
-    # Protocol v1 did not echo a final version. v2/v3 do.
     if selected_version != 0x12:
         confirmed_version = recv_byte(sock)
+        print(f"[handshake] confirmed version: 0x{confirmed_version:02X}")
         if confirmed_version in (PROTOCOL_ABORT, 0x00):
             raise RuntimeError("Wii U rejected the network protocol version")
-        if confirmed_version != selected_version:
-            raise RuntimeError(
-                f"unexpected protocol version 0x{confirmed_version:02X}, expected 0x{selected_version:02X}"
-            )
+        
+        # In v3, we check if there's an extra byte waiting, but don't block forever
+        sock.settimeout(0.1)
+        try:
+            extra = sock.recv(1)
+            if extra:
+                print(f"[handshake] client status: 0x{extra[0]:02X}")
+        except socket.timeout:
+            pass
+        finally:
+            sock.settimeout(timeout)
+
+    # Return immediately to send ATTACH fast
     return sock
 
 
 def attach_device(sock: socket.socket, vid: int, pid: int, handle: int) -> tuple[int, int]:
-    sock.sendall(struct.pack(">Bihh", TCP_CMD_ATTACH, handle, vid, pid))
+    print(f"[attach] sending attach for VID=0x{vid:04X} PID=0x{pid:04X} handle=0x{handle:08X} ...")
+    try:
+        data = struct.pack(">Bihh", TCP_CMD_ATTACH, handle, vid, pid)
+        sock.sendall(data)
+    except BrokenPipeError:
+        print("[attach] error: socket broken during send")
+        raise
+    except Exception as e:
+        print(f"[attach] error during send: {e}")
+        raise
 
+    print("[attach] waiting for config status...")
     config_status = recv_byte(sock)
+    print(f"[attach] config status: 0x{config_status:02X}")
     if config_status == ATTACH_CONFIG_NOT_FOUND:
         raise RuntimeError(
             "Wii U did not find a controller config for this virtual device. "
@@ -143,12 +168,15 @@ def attach_device(sock: socket.socket, vid: int, pid: int, handle: int) -> tuple
         raise RuntimeError(f"unexpected attach config response 0x{config_status:02X}")
 
     userdata_status = recv_byte(sock)
+    print(f"[attach] userdata status: 0x{userdata_status:02X}")
     if userdata_status == ATTACH_USERDATA_BAD:
         raise RuntimeError("Wii U rejected the virtual device user data")
     if userdata_status != ATTACH_USERDATA_OKAY:
         raise RuntimeError(f"unexpected attach userdata response 0x{userdata_status:02X}")
 
-    device_slot, pad_slot = struct.unpack(">hB", read_exact(sock, 3))
+    resp = read_exact(sock, 3)
+    device_slot, pad_slot = struct.unpack(">hB", resp)
+    print(f"[attach] assigned device_slot={device_slot} pad_slot={pad_slot}")
     if device_slot < 0:
         raise RuntimeError("Wii U returned an invalid device slot")
     return device_slot, pad_slot
@@ -181,16 +209,43 @@ def signed_axis(value: int) -> int:
 
 def build_xinput_report(keys: Iterable[str]) -> bytes:
     active = set(keys)
-    lx = (127 if "d" in active else 0) + (-128 if "a" in active else 0)
-    ly = (127 if "w" in active else 0) + (-128 if "s" in active else 0)
-    rx = (127 if "right" in active else 0) + (-128 if "left" in active else 0)
-    ry = (127 if "up" in active else 0) + (-128 if "down" in active else 0)
+    
+    # Left Stick (WASD)
+    lx = 0
+    ly = 0
+    if "w" in active: ly += 127
+    if "s" in active: ly -= 128
+    if "a" in active: lx -= 128
+    if "d" in active: lx += 127
+    
+    # Right Stick (Arrows)
+    rx = 0
+    ry = 0
+    if "up" in active: ry += 127
+    if "down" in active: ry -= 128
+    if "left" in active: rx -= 128
+    if "right" in active: rx += 127
 
     buttons = 0
-    for key, mask in KEY_BUTTONS.items():
-        if key in active:
-            buttons |= mask
-    for key, mask in (("dpup", BUTTON_UP), ("dpdown", BUTTON_DOWN), ("dpleft", BUTTON_LEFT), ("dpright", BUTTON_RIGHT)):
+    # Map letters to buttons
+    mapping = {
+        " ": BUTTON_A,
+        "j": BUTTON_B,
+        "k": BUTTON_X,
+        "l": BUTTON_Y,
+        "u": BUTTON_LB,
+        "i": BUTTON_RB,
+        "o": BUTTON_L3,
+        "p": BUTTON_R3,
+        "q": BUTTON_BACK,
+        "plus": BUTTON_START,
+        "minus": BUTTON_BACK,
+        "h": BUTTON_GUIDE,
+        "z": BUTTON_LB, # ZL/L alternate
+        "x": BUTTON_RB, # ZR/R alternate
+    }
+    
+    for key, mask in mapping.items():
         if key in active:
             buttons |= mask
 
@@ -203,18 +258,31 @@ def stdin_keys() -> Iterable[str]:
         ready, _, _ = select.select([sys.stdin], [], [], 0)
         if not ready:
             return
-        char = os.read(sys.stdin.fileno(), 1).decode(errors="ignore")
-        if char == "\x1b":
-            seq = os.read(sys.stdin.fileno(), 2).decode(errors="ignore")
-            if len(seq) == 2 and seq[0] == "[" and seq[1] in ARROW_ESCAPE_TO_BUTTON:
-                yield {"A": "up", "B": "down", "C": "right", "D": "left"}[seq[1]]
-            continue
-        if char == "\x03":
-            raise KeyboardInterrupt
-        if char == "\r":
-            yield "e"
-        else:
-            yield char.lower()
+        
+        # Read available data
+        data = os.read(sys.stdin.fileno(), 16).decode(errors="ignore")
+        i = 0
+        while i < len(data):
+            char = data[i]
+            if char == "\x1b":  # Escape sequence
+                if i + 2 < len(data) and data[i+1] == "[":
+                    code = data[i+2]
+                    if code == "A": yield "up"
+                    elif code == "B": yield "down"
+                    elif code == "C": yield "right"
+                    elif code == "D": yield "left"
+                    i += 3
+                    continue
+            
+            if char == "\x03": # Ctrl+C
+                raise KeyboardInterrupt
+            elif char == "\r" or char == "\n":
+                yield "plus"
+            elif char == "\x7f" or char == "\x08": # Backspace / Delete
+                yield "minus"
+            else:
+                yield char.lower()
+            i += 1
 
 
 def parse_args() -> argparse.Namespace:
@@ -230,16 +298,21 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    old_term = termios.tcgetattr(sys.stdin)
     tcp_sock: Optional[socket.socket] = None
+    old_term = None
 
     def restore_terminal() -> None:
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_term)
-
-    tty.setcbreak(sys.stdin.fileno())
-    atexit.register(restore_terminal)
+        if old_term is not None:
+            termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_term)
 
     try:
+        try:
+            old_term = termios.tcgetattr(sys.stdin.fileno())
+            tty.setcbreak(sys.stdin.fileno())
+            atexit.register(restore_terminal)
+        except (termios.error, Exception):
+            print("Warning: Could not set up terminal for interactive keyboard input (not a TTY). Network only mode.")
+
         print(f"Connecting to Wii U {args.host}:{TCP_PORT} ...")
         tcp_sock = connect_tcp(args.host, timeout=5.0)
         atexit.register(lambda: detach_device(tcp_sock, args.handle))

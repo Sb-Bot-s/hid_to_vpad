@@ -33,6 +33,7 @@ WUPS_USE_STORAGE("hid_to_vpad");
 extern bool runNetworkClient;
 
 void ApplyNetworkServerState();
+void StopNetworkServer();
 
 #define SD_PATH                          "fs:/vol/external01"
 #define WIIU_PATH                        "/wiiu"
@@ -61,15 +62,15 @@ INITIALIZE_PLUGIN() {
 
 DEINITIALIZE_PLUGIN() {
     ControllerPatcher::DeInit();
-    ControllerPatcher::stopNetworkServer();
+    StopNetworkServer();
 }
 
 ON_APPLICATION_REQUESTS_EXIT() {
     //CursorDrawer::destroyInstance();
     DEBUG_FUNCTION_LINE("ON_APPLICATION_ENDING");
     ControllerPatcher::destroyConfigHelper();
-    DEBUG_FUNCTION_LINE("Calling stopNetworkServer");
-    ControllerPatcher::stopNetworkServer();
+    DEBUG_FUNCTION_LINE("Calling StopNetworkServer (Custom)");
+    StopNetworkServer();
     DEBUG_FUNCTION_LINE("Calling resetCallbackData");
     ControllerPatcher::resetCallbackData();
     ControllerPatcher::restoreWiiUEnergySetting();

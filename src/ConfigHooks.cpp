@@ -27,14 +27,17 @@
 
 bool runNetworkClient = true;
 
+void StartNetworkServer();
+void StopNetworkServer();
+
 void ApplyNetworkServerState() {
     ControllerPatcher::setNetworkControllerActivated(runNetworkClient);
     if (runNetworkClient) {
-        DEBUG_FUNCTION_LINE("Starting HID to VPAD network input server");
-        ControllerPatcher::startNetworkServer();
+        DEBUG_FUNCTION_LINE("Starting HID to VPAD network input server (Custom)");
+        StartNetworkServer();
     } else {
-        DEBUG_FUNCTION_LINE("Stopping HID to VPAD network input server");
-        ControllerPatcher::stopNetworkServer();
+        DEBUG_FUNCTION_LINE("Stopping HID to VPAD network input server (Custom)");
+        StopNetworkServer();
     }
 }
 
