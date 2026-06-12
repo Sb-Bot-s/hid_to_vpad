@@ -1,0 +1,284 @@
+2026-06-12 06:06:55.245Z: Host information
+2026-06-12 06:06:55.245Z: ----------------
+2026-06-12 06:06:55.245Z: OS: Ubuntu 22.04.5 LTS (stable release)
+2026-06-12 06:06:55.245Z: Image details: https://github.com/github/codespaces-host-images/blob/main/README.md
+2026-06-12 06:06:55.245Z: ----------------
+
+=================================================================================
+2026-06-12 06:06:55.245Z: Configuration starting...
+2026-06-12 06:06:55.256Z: Cloning...
+
+=================================================================================
+2026-06-12 06:06:56.434Z: Creating container...
+2026-06-12 06:06:56.484Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/hid_to_vpad --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --user-data-folder /var/lib/docker/codespacemount/.persistedshare --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --omit-config-remote-env-from-metadata --skip-non-blocking-commands --skip-post-create --config "/var/lib/docker/codespacemount/workspace/hid_to_vpad/.devcontainer/devcontainer.json" --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2026-06-12 06:06:56.635Z: @devcontainers/cli 0.83.3. Node.js v18.20.8. linux 6.8.0-1052-azure x64.
+2026-06-12 06:06:57.339Z: Resolving Feature dependencies for 'ghcr.io/devcontainers/features/docker-in-docker:2'...
+2026-06-12 06:06:58.270Z: Soft-dependency 'ghcr.io/devcontainers/features/common-utils' is not required.  Removing from installation order...
+2026-06-12 06:06:58.585Z: Files to omit: ''
+2026-06-12 06:06:58.606Z: $22 --build-arg _DEV_CONTAINERS_IMAGE_USER=root --build-arg _DEV_CONTAINERS_FEATURE_CONTENT_SOURCE=dev_container_feature_content_temp --target dev_containers_target_stage -f /tmp/devcontainercli-root/container-features/0.83.3-1781244417334/Dockerfile.extended -t vsc-hid_to_vpad-b89337a7417cc0b592b39facab36692399aaed00c53668f0634034fd932aa50f-features /var/lib/docker/codespacemount/.persistedshare/empty-folder
+2026-06-12 06:06:59.122Z: #0 building with "default" instance using docker driver
+
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
+2026-06-12 06:06:59.123Z: #1 DONE 0.1s
+
+#2 [internal] load build definition from Dockerfile.extended
+#2 transferring dockerfile: 3.85kB done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for mcr.microsoft.com/devcontainers/javascript-node:22
+2026-06-12 06:06:59.281Z: #3 ...
+
+2026-06-12 06:06:59.282Z: #4 [context dev_containers_feature_content_source] load .dockerignore
+#4 transferring dev_containers_feature_content_source: 2B done
+#4 DONE 0.0s
+2026-06-12 06:06:59.432Z: 
+#3 [internal] load metadata for mcr.microsoft.com/devcontainers/javascript-node:22
+2026-06-12 06:06:59.540Z: #3 DONE 0.4s
+2026-06-12 06:06:59.691Z: 
+#5 [context dev_containers_feature_content_source] load from client
+2026-06-12 06:06:59.691Z: #5 transferring dev_containers_feature_content_source: 122.26kB done
+#5 DONE 0.0s
+
+#6 [dev_containers_feature_content_normalize 1/3] FROM mcr.microsoft.com/devcontainers/javascript-node:22@sha256:d2cfecfcd1cf79b0a0b03796c5fd777601b76f8948cd423c1cd06a6e5a3c718a
+#6 resolve mcr.microsoft.com/devcontainers/javascript-node:22@sha256:d2cfecfcd1cf79b0a0b03796c5fd777601b76f8948cd423c1cd06a6e5a3c718a 0.0s done
+#6 sha256:b19bf7f8008008cd1f0ef3a4721a812c3ba799cbca89ab117bef99937cb0bd5f 3.91kB / 3.91kB done
+#6 sha256:82a92b93bf7181c9d6b4525236a1a2fec85dc591d4deee481e828e707853f42c 0B / 67.79MB 0.1s
+#6 sha256:d2cfecfcd1cf79b0a0b03796c5fd777601b76f8948cd423c1cd06a6e5a3c718a 1.61kB / 1.61kB done
+#6 sha256:caf6c0a95e34418907d5abfe604d08c5cc6bf9d689943856fcd842eb2be82c6c 0B / 25.62MB 0.1s
+#6 sha256:bb8d09380d9a9c478d822a85c2d5bb71f2cc6e01d8982c319e05b7ad52283657 23.81kB / 23.81kB done
+#6 sha256:307f8152a55ef1e9eeb1acbbee7bc81232615329eaeb00d8dd93b46be297f34c 0B / 49.30MB 0.1s
+2026-06-12 06:06:59.795Z: #6 sha256:307f8152a55ef1e9eeb1acbbee7bc81232615329eaeb00d8dd93b46be297f34c 14.68MB / 49.30MB 0.2s
+2026-06-12 06:06:59.995Z: #6 sha256:82a92b93bf7181c9d6b4525236a1a2fec85dc591d4deee481e828e707853f42c 21.80MB / 67.79MB 0.4s
+#6 sha256:caf6c0a95e34418907d5abfe604d08c5cc6bf9d689943856fcd842eb2be82c6c 25.62MB / 25.62MB 0.4s
+#6 sha256:307f8152a55ef1e9eeb1acbbee7bc81232615329eaeb00d8dd93b46be297f34c 49.30MB / 49.30MB 0.4s
+2026-06-12 06:07:00.094Z: #6 sha256:82a92b93bf7181c9d6b4525236a1a2fec85dc591d4deee481e828e707853f42c 48.23MB / 67.79MB 0.5s
+2026-06-12 06:07:00.291Z: #6 sha256:82a92b93bf7181c9d6b4525236a1a2fec85dc591d4deee481e828e707853f42c 67.79MB / 67.79MB 0.7s
+2026-06-12 06:07:00.792Z: #6 sha256:307f8152a55ef1e9eeb1acbbee7bc81232615329eaeb00d8dd93b46be297f34c 49.30MB / 49.30MB 1.2s done
+2026-06-12 06:07:01.192Z: #6 sha256:caf6c0a95e34418907d5abfe604d08c5cc6bf9d689943856fcd842eb2be82c6c 25.62MB / 25.62MB 1.6s done
+#6 sha256:34fb3af6421f2f75c3b7e66a0e16077f88018aff76c1f6c6f02288802308f3c0 0B / 3.32kB 1.6s
+2026-06-12 06:07:01.366Z: #6 sha256:34fb3af6421f2f75c3b7e66a0e16077f88018aff76c1f6c6f02288802308f3c0 3.32kB / 3.32kB 1.7s2026-06-12 06:07:01.367Z: 
+#6 extracting sha256:307f8152a55ef1e9eeb1acbbee7bc81232615329eaeb00d8dd93b46be297f34c 0.1s
+2026-06-12 06:07:02.898Z: #6 sha256:82a92b93bf7181c9d6b4525236a1a2fec85dc591d4deee481e828e707853f42c 67.79MB / 67.79MB 3.1s done2026-06-12 06:07:02.899Z: 
+#6 sha256:34fb3af6421f2f75c3b7e66a0e16077f88018aff76c1f6c6f02288802308f3c0 3.32kB / 3.32kB 3.1s done
+2026-06-12 06:07:02.899Z: #6 sha256:67a1c2df9cc93a9584bfe448026ed42c44dc305ef79a055ebec54cf5a9739aa3 1.25MB / 1.25MB 3.3s done2026-06-12 06:07:02.900Z: 
+2026-06-12 06:07:02.903Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 8.85MB / 236.15MB 3.3s
+#6 sha256:3b243d17effecc17b927e143f76a2ecbe62a0b5b652146b6647591688359fd51 8.39MB / 58.55MB 3.3s
+2026-06-12 06:07:02.905Z: #6 sha256:5b3673b98f35602fdfc548eb9fa73b782e7ee7ba4a940e1d2ade18e9fbf88201 0B / 449B 3.3s
+2026-06-12 06:07:03.049Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 25.17MB / 236.15MB 3.4s
+#6 sha256:3b243d17effecc17b927e143f76a2ecbe62a0b5b652146b6647591688359fd51 24.12MB / 58.55MB 3.4s
+#6 sha256:5b3673b98f35602fdfc548eb9fa73b782e7ee7ba4a940e1d2ade18e9fbf88201 449B / 449B 3.4s done
+2026-06-12 06:07:03.197Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 50.79MB / 236.15MB 3.6s
+2026-06-12 06:07:03.198Z: #6 sha256:3b243d17effecc17b927e143f76a2ecbe62a0b5b652146b6647591688359fd51 51.72MB / 58.55MB 3.6s
+#6 sha256:062913e244dd550546b24dbc1ac8ce0df2b56df27472dd2626efaf1a1101e678 6.04MB / 6.04MB 3.6s
+2026-06-12 06:07:03.343Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 63.86MB / 236.15MB 3.7s
+2026-06-12 06:07:03.343Z: #6 sha256:3b243d17effecc17b927e143f76a2ecbe62a0b5b652146b6647591688359fd51 58.55MB / 58.55MB 3.7s
+#6 sha256:062913e244dd550546b24dbc1ac8ce0df2b56df27472dd2626efaf1a1101e678 6.04MB / 6.04MB 3.7s done
+#6 sha256:53f1d355f4789d2875e1bad71e0c9b80cbb87ecd765cbf110113aba17ad8b907 0B / 838B 3.7s
+2026-06-12 06:07:03.480Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 79.42MB / 236.15MB 3.8s
+2026-06-12 06:07:03.481Z: #6 sha256:53f1d355f4789d2875e1bad71e0c9b80cbb87ecd765cbf110113aba17ad8b907 838B / 838B 3.8s
+2026-06-12 06:07:03.604Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 105.91MB / 236.15MB 4.0s2026-06-12 06:07:03.605Z: 
+2026-06-12 06:07:03.704Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 119.07MB / 236.15MB 4.1s
+2026-06-12 06:07:03.915Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 145.75MB / 236.15MB 4.3s
+2026-06-12 06:07:04.093Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 175.08MB / 236.15MB 4.5s
+2026-06-12 06:07:04.195Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 190.64MB / 236.15MB 4.6s2026-06-12 06:07:04.195Z: 
+#6 sha256:3b243d17effecc17b927e143f76a2ecbe62a0b5b652146b6647591688359fd51 58.55MB / 58.55MB 4.5s done
+#6 sha256:53f1d355f4789d2875e1bad71e0c9b80cbb87ecd765cbf110113aba17ad8b907 838B / 838B 4.5s done
+#6 sha256:584fad7899d243781715546f09681d6810ee048b0d405897540163eeb0d5233a 0B / 838B 4.6s
+#6 sha256:bb12d73113600e57415a84817dd0d2ba685fabd86e34105c3890890acdb2ec05 0B / 7.56kB 4.6s
+2026-06-12 06:07:04.298Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 212.60MB / 236.15MB 4.7s2026-06-12 06:07:04.300Z: 
+#6 sha256:584fad7899d243781715546f09681d6810ee048b0d405897540163eeb0d5233a 838B / 838B 4.6s done
+#6 sha256:bb12d73113600e57415a84817dd0d2ba685fabd86e34105c3890890acdb2ec05 7.56kB / 7.56kB 4.6s done
+#6 sha256:06af25336edb9d82b200ec480889cb1ce311747bb19ab1cc5436f140c004624e 0B / 135B 4.7s
+2026-06-12 06:07:04.497Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 236.15MB / 236.15MB 4.9s
+#6 sha256:06af25336edb9d82b200ec480889cb1ce311747bb19ab1cc5436f140c004624e 135B / 135B 4.7s done
+#6 sha256:e4b34ce70b4ce3ee2da6b46b412071021f299748fdd2a6968cf0f1a906f45ad3 223B / 223B 4.8s done
+#6 sha256:beb68adca1d2e04747970dc7af488f8a82de2be374dec6c07cb9cd17cb3dd9f5 422B / 422B 4.7s done
+#6 sha256:e4b65ce1aa2f2f5ddfe0c8b55cbd66153a90492e48c66492eb53c2f9d1672e98 241B / 241B 4.8s done
+#6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 1.31MB / 115.69MB 4.9s
+#6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 753.66kB / 68.01MB 4.9s
+2026-06-12 06:07:04.695Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 13.63MB / 115.69MB 5.1s
+#6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 14.68MB / 68.01MB 5.1s
+2026-06-12 06:07:04.799Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 19.69MB / 115.69MB 5.2s
+#6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 20.97MB / 68.01MB 5.2s
+2026-06-12 06:07:04.911Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 32.53MB / 115.69MB 5.3s
+#6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 30.41MB / 68.01MB 5.3s2026-06-12 06:07:04.913Z: 
+2026-06-12 06:07:05.013Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 41.94MB / 115.69MB 5.4s
+#6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 39.85MB / 68.01MB 5.4s
+2026-06-12 06:07:05.196Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 61.87MB / 115.69MB 5.6s
+#6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 59.77MB / 68.01MB 5.6s
+2026-06-12 06:07:05.295Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 70.95MB / 115.69MB 5.7s
+#6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 66.43MB / 68.01MB 5.7s
+2026-06-12 06:07:05.405Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 81.79MB / 115.69MB 5.8s2026-06-12 06:07:05.405Z: 
+2026-06-12 06:07:05.534Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 92.43MB / 115.69MB 5.9s
+2026-06-12 06:07:05.691Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 115.69MB / 115.69MB 6.1s
+2026-06-12 06:07:06.102Z: #6 extracting sha256:307f8152a55ef1e9eeb1acbbee7bc81232615329eaeb00d8dd93b46be297f34c 4.9s done2026-06-12 06:07:06.102Z: 
+2026-06-12 06:07:08.992Z: #6 sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 236.15MB / 236.15MB 9.3s done
+2026-06-12 06:07:09.993Z: #6 sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 68.01MB / 68.01MB 10.4s done
+2026-06-12 06:07:10.792Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 115.69MB / 115.69MB 11.2s
+2026-06-12 06:07:13.191Z: #6 sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 115.69MB / 115.69MB 13.5s done2026-06-12 06:07:13.191Z: 
+#6 sha256:b33b8a100a3f06d3753dbe69abd245855777daa8457f583222edbc076cd8210d 10.91MB / 10.91MB 13.6s
+2026-06-12 06:07:14.190Z: #6 sha256:b33b8a100a3f06d3753dbe69abd245855777daa8457f583222edbc076cd8210d 10.91MB / 10.91MB 14.6s done2026-06-12 06:07:14.192Z: 
+2026-06-12 06:07:14.310Z: #6 extracting sha256:caf6c0a95e34418907d5abfe604d08c5cc6bf9d689943856fcd842eb2be82c6c 0.1s
+2026-06-12 06:07:15.466Z: #6 extracting sha256:caf6c0a95e34418907d5abfe604d08c5cc6bf9d689943856fcd842eb2be82c6c 1.1s done
+2026-06-12 06:07:16.832Z: #6 extracting sha256:82a92b93bf7181c9d6b4525236a1a2fec85dc591d4deee481e828e707853f42c
+2026-06-12 06:07:20.614Z: #6 extracting sha256:82a92b93bf7181c9d6b4525236a1a2fec85dc591d4deee481e828e707853f42c 3.6s done
+2026-06-12 06:07:23.838Z: #6 extracting sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73
+2026-06-12 06:07:28.876Z: #6 extracting sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 5.0s2026-06-12 06:07:28.876Z: 
+2026-06-12 06:07:33.945Z: #6 extracting sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 10.1s
+2026-06-12 06:07:40.168Z: #6 extracting sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 16.3s
+2026-06-12 06:07:40.516Z: #6 extracting sha256:5470790761244112ed0b9ea9218282e5185dc7fd1e91840e855a32550e2ecd73 16.7s done
+2026-06-12 06:07:44.584Z: #6 extracting sha256:34fb3af6421f2f75c3b7e66a0e16077f88018aff76c1f6c6f02288802308f3c0
+2026-06-12 06:07:44.769Z: #6 extracting sha256:34fb3af6421f2f75c3b7e66a0e16077f88018aff76c1f6c6f02288802308f3c0 done
+#6 extracting sha256:3b243d17effecc17b927e143f76a2ecbe62a0b5b652146b6647591688359fd51 0.1s
+2026-06-12 06:07:47.642Z: #6 extracting sha256:3b243d17effecc17b927e143f76a2ecbe62a0b5b652146b6647591688359fd51 2.8s done
+2026-06-12 06:07:51.037Z: #6 extracting sha256:67a1c2df9cc93a9584bfe448026ed42c44dc305ef79a055ebec54cf5a9739aa3
+2026-06-12 06:07:51.201Z: #6 extracting sha256:67a1c2df9cc93a9584bfe448026ed42c44dc305ef79a055ebec54cf5a9739aa3 0.0s done
+#6 extracting sha256:5b3673b98f35602fdfc548eb9fa73b782e7ee7ba4a940e1d2ade18e9fbf88201
+2026-06-12 06:07:51.341Z: #6 extracting sha256:5b3673b98f35602fdfc548eb9fa73b782e7ee7ba4a940e1d2ade18e9fbf88201 done2026-06-12 06:07:51.342Z: 
+#6 extracting sha256:062913e244dd550546b24dbc1ac8ce0df2b56df27472dd2626efaf1a1101e678 0.1s
+2026-06-12 06:07:52.225Z: #6 extracting sha256:062913e244dd550546b24dbc1ac8ce0df2b56df27472dd2626efaf1a1101e678 0.8s done
+2026-06-12 06:07:52.614Z: #6 extracting sha256:53f1d355f4789d2875e1bad71e0c9b80cbb87ecd765cbf110113aba17ad8b907
+2026-06-12 06:07:52.725Z: #6 extracting sha256:53f1d355f4789d2875e1bad71e0c9b80cbb87ecd765cbf110113aba17ad8b907 done
+#6 extracting sha256:584fad7899d243781715546f09681d6810ee048b0d405897540163eeb0d5233a done
+#6 extracting sha256:bb12d73113600e57415a84817dd0d2ba685fabd86e34105c3890890acdb2ec05 done
+#6 extracting sha256:beb68adca1d2e04747970dc7af488f8a82de2be374dec6c07cb9cd17cb3dd9f5
+2026-06-12 06:07:52.928Z: #6 extracting sha256:beb68adca1d2e04747970dc7af488f8a82de2be374dec6c07cb9cd17cb3dd9f5 done
+#6 extracting sha256:06af25336edb9d82b200ec480889cb1ce311747bb19ab1cc5436f140c004624e done
+2026-06-12 06:07:52.930Z: #6 extracting sha256:e4b34ce70b4ce3ee2da6b46b412071021f299748fdd2a6968cf0f1a906f45ad3 done
+#6 extracting sha256:e4b65ce1aa2f2f5ddfe0c8b55cbd66153a90492e48c66492eb53c2f9d1672e98 done
+#6 extracting sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd
+2026-06-12 06:07:59.270Z: #6 extracting sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 6.3s
+2026-06-12 06:08:03.354Z: #6 extracting sha256:d6e14479a0272d6d19dd5c95c06996c477ba3ec4aac28dbcd8e34303469c6abd 10.3s done2026-06-12 06:08:03.354Z: 
+2026-06-12 06:08:07.614Z: #6 extracting sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee40002026-06-12 06:08:07.618Z: 
+2026-06-12 06:08:09.701Z: #6 extracting sha256:e11c233155701f4c8107347068cbed6d09c1192541efbf9e3591851be2ee4000 1.9s done
+2026-06-12 06:08:12.005Z: #6 extracting sha256:b33b8a100a3f06d3753dbe69abd245855777daa8457f583222edbc076cd8210d
+2026-06-12 06:08:12.659Z: #6 extracting sha256:b33b8a100a3f06d3753dbe69abd245855777daa8457f583222edbc076cd8210d 0.5s done
+2026-06-12 06:08:13.457Z: #6 DONE 73.9s
+
+#7 [dev_containers_target_stage 2/5] RUN mkdir -p /tmp/dev-container-features
+2026-06-12 06:08:13.679Z: #7 ...
+
+#8 [dev_containers_feature_content_normalize 2/3] COPY --from=dev_containers_feature_content_source devcontainer-features.builtin.env /tmp/build-features/
+#8 DONE 0.1s
+2026-06-12 06:08:13.829Z: 
+#9 [dev_containers_feature_content_normalize 3/3] RUN chmod -R 0755 /tmp/build-features/
+2026-06-12 06:08:14.005Z: #9 DONE 0.5s
+
+#7 [dev_containers_target_stage 2/5] RUN mkdir -p /tmp/dev-container-features
+2026-06-12 06:08:14.463Z: #7 DONE 1.0s
+2026-06-12 06:08:14.711Z: 
+#10 [dev_containers_target_stage 3/5] COPY --from=dev_containers_feature_content_normalize /tmp/build-features/ /tmp/dev-container-features
+2026-06-12 06:08:14.711Z: #10 DONE 0.1s
+
+#11 [dev_containers_target_stage 4/5] RUN echo "_CONTAINER_USER_HOME=$( (command -v getent >/dev/null 2>&1 && getent passwd 'root' || grep -E '^root|^[^:]*:[^:]*:root:' /etc/passwd || ********) | cut -d: -f6)" >> /tmp/dev-container-features/devcontainer-features.builtin.env && echo "_REMOTE_USER_HOME=$( (command -v getent >/dev/null 2>&1 && getent passwd 'node' || grep -E '^node|^[^:]*:[^:]*:node:' /etc/passwd || ********) | cut -d: -f6)" >> /tmp/dev-container-features/devcontainer-features.builtin.env
+2026-06-12 06:08:14.808Z: #11 DONE 0.2s
+2026-06-12 06:08:14.963Z: 
+#12 [dev_containers_target_stage 5/5] RUN --mount=type=bind,from=dev_containers_feature_content_source,source=docker-in-docker_0,target=/tmp/build-features-src/docker-in-docker_0     cp -ar /tmp/build-features-src/docker-in-docker_0 /tmp/dev-container-features  && chmod -R 0755 /tmp/dev-container-features/docker-in-docker_0  && cd /tmp/dev-container-features/docker-in-docker_0  && chmod +x ./devcontainer-features-install.sh  && ./devcontainer-features-install.sh  && rm -rf /tmp/dev-container-features/docker-in-docker_0
+2026-06-12 06:08:15.437Z: #12 0.651 ===========================================================================
+2026-06-12 06:08:15.541Z: #12 0.652 Feature       : Docker (Docker-in-Docker)
+#12 0.652 Description   : Create child containers *inside* a container, independent from the host's docker instance. Installs Docker extension in the container along with needed CLIs.
+#12 0.652 Id            : ghcr.io/devcontainers/features/docker-in-docker
+#12 0.652 Version       : 2.17.0
+#12 0.652 Documentation : ********/devcontainers/features/tree/main/src/docker-in-docker
+#12 0.652 Options       :
+#12 0.652     VERSION="latest"
+#12 0.652     MOBY="********"
+#12 0.652     MOBYBUILDXVERSION="latest"
+#12 0.652     DOCKERDASHCOMPOSEVERSION="v2"
+#12 0.652     AZUREDNSAUTODETECTION="********"
+#12 0.652     DOCKERDEFAULTADDRESSPOOL=""
+#12 0.652     INSTALLDOCKERBUILDX="********"
+#12 0.652     INSTALLDOCKERCOMPOSESWITCH="false"
+#12 0.652     DISABLEIP6TABLES="false"
+#12 0.652 ===========================================================================
+#12 0.727 (!) The 'moby' option is not supported on debian 'trixie' because 'moby-cli' and related system packages are not available in that distribution.
+#12 0.728 (!) To continue, either set the feature option '"moby": false' or use a different base image.
+#12 0.728 ERROR: Feature "Docker (Docker-in-Docker)" (ghcr.io/devcontainers/features/docker-in-docker) failed to install! Look at the documentation at ********/devcontainers/features/tree/main/src/docker-in-docker for help troubleshooting this error.
+#12 ERROR: process "/bin/sh -c cp -ar /tmp/build-features-src/docker-in-docker_0 /tmp/dev-container-features  && chmod -R 0755 /tmp/dev-container-features/docker-in-docker_0  && cd /tmp/dev-container-features/docker-in-docker_0  && chmod +x ./devcontainer-features-install.sh  && ./devcontainer-features-install.sh  && rm -rf /tmp/dev-container-features/docker-in-docker_0" did not complete successfully: exit code: 1
+2026-06-12 06:08:15.642Z: ------
+ > [dev_containers_target_stage 5/5] RUN --mount=type=bind,from=dev_containers_feature_content_source,source=docker-in-docker_0,target=/tmp/build-features-src/docker-in-docker_0     cp -ar /tmp/build-features-src/docker-in-docker_0 /tmp/dev-container-features  && chmod -R 0755 /tmp/dev-container-features/docker-in-docker_0  && cd /tmp/dev-container-features/docker-in-docker_0  && chmod +x ./devcontainer-features-install.sh  && ./devcontainer-features-install.sh  && rm -rf /tmp/dev-container-features/docker-in-docker_0:
+0.652     DOCKERDASHCOMPOSEVERSION="v2"
+0.652     AZUREDNSAUTODETECTION="********"
+0.652     DOCKERDEFAULTADDRESSPOOL=""
+0.652     INSTALLDOCKERBUILDX="********"
+0.652     INSTALLDOCKERCOMPOSESWITCH="false"
+0.652     DISABLEIP6TABLES="false"
+0.652 ===========================================================================
+0.727 (!) The 'moby' option is not supported on debian 'trixie' because 'moby-cli' and related system packages are not available in that distribution.2026-06-12 06:08:15.642Z: 
+0.728 (!) To continue, either set the feature option '"moby": false' or use a different base image.
+0.728 ERROR: Feature "Docker (Docker-in-Docker)" (ghcr.io/devcontainers/features/docker-in-docker) failed to install! Look at the documentation at ********/devcontainers/features/tree/main/src/docker-in-docker for help troubleshooting this error.
+------
+2026-06-12 06:08:15.659Z: Dockerfile.extended:24
+--------------------
+  23 |     ENV DOCKER_BUILDKIT="1"
+  24 | >>> RUN --mount=type=bind,from=dev_containers_feature_content_source,source=docker-in-docker_0,target=/tmp/build-features-src/docker-in-docker_0 \
+  25 | >>>     cp -ar /tmp/build-features-src/docker-in-docker_0 /tmp/dev-container-features \
+  26 | >>>  && chmod -R 0755 /tmp/dev-container-features/docker-in-docker_0 \
+  27 | >>>  && cd /tmp/dev-container-features/docker-in-docker_0 \
+  28 | >>>  && chmod +x ./devcontainer-features-install.sh \
+  29 | >>>  && ./devcontainer-features-install.sh \
+  30 | >>>  && rm -rf /tmp/dev-container-features/docker-in-docker_0
+  31 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c cp -ar /tmp/build-features-src/docker-in-docker_0 /tmp/dev-container-features  && chmod -R 0755 /tmp/dev-container-features/docker-in-docker_0  && cd /tmp/dev-container-features/docker-in-docker_0  && chmod +x ./devcontainer-features-install.sh  && ./devcontainer-features-install.sh  && rm -rf /tmp/dev-container-features/docker-in-docker_0" did not complete successfully: exit code: 1
+2026-06-12 06:08:15.674Z: Stop: Run: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 --build-context dev_containers_feature_content_source=/tmp/devcontainercli-root/container-features/0.83.3-1781244417334 --build-arg _DEV_CONTAINERS_BASE_IMAGE=mcr.microsoft.com/devcontainers/javascript-node:22 --build-arg _DEV_CONTAINERS_IMAGE_USER=root --build-arg _DEV_CONTAINERS_FEATURE_CONTENT_SOURCE=dev_container_feature_content_temp --target dev_containers_target_stage -f /tmp/devcontainercli-root/container-features/0.83.3-1781244417334/Dockerfile.extended -t vsc-hid_to_vpad-b89337a7417cc0b592b39facab36692399aaed00c53668f0634034fd932aa50f-features /var/lib/docker/codespacemount/.persistedshare/empty-folder
+2026-06-12 06:08:15.675Z: Error: Command failed: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 --build-context dev_containers_feature_content_source=/tmp/devcontainercli-root/container-features/0.83.3-1781244417334 --build-arg _DEV_CONTAINERS_BASE_IMAGE=mcr.microsoft.com/devcontainers/javascript-node:22 --build-arg _DEV_CONTAINERS_IMAGE_USER=root --build-arg _DEV_CONTAINERS_FEATURE_CONTENT_SOURCE=dev_container_feature_content_temp --target dev_containers_target_stage -f /tmp/devcontainercli-root/container-features/0.83.3-1781244417334/Dockerfile.extended -t vsc-hid_to_vpad-b89337a7417cc0b592b39facab36692399aaed00c53668f0634034fd932aa50f-features /var/lib/docker/codespacemount/.persistedshare/empty-folder
+2026-06-12 06:08:15.675Z:     at U9 (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:467:1277)
+2026-06-12 06:08:15.675Z:     at RL (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:467:1021)
+2026-06-12 06:08:15.675Z: {"outcome":"error","message":"Command failed: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 --build-context dev_containers_feature_content_source=/tmp/devcontainercli-root/container-features/0.83.3-1781244417334 --build-arg _DEV_CONTAINERS_BASE_IMAGE=mcr.microsoft.com/devcontainers/javascript-node:22 --build-arg _DEV_CONTAINERS_IMAGE_USER=root --build-arg _DEV_CONTAINERS_FEATURE_CONTENT_SOURCE=dev_container_feature_content_temp --target dev_containers_target_stage -f /tmp/devcontainercli-root/container-features/0.83.3-1781244417334/Dockerfile.extended -t vsc-hid_to_vpad-b89337a7417cc0b592b39facab36692399aaed00c53668f0634034fd932aa50f-features /var/lib/docker/codespacemount/.persistedshare/empty-folder","description":"An error occurred setting up the container."}
+2026-06-12 06:08:15.676Z:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-06-12 06:08:15.676Z:     at async AZ (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:485:3870)
+2026-06-12 06:08:15.678Z:     at async uC (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:485:4989)
+2026-06-12 06:08:15.678Z:     at async L5 (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:666:205)
+2026-06-12 06:08:15.678Z:     at async G5 (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:665:15084)
+2026-06-12 06:08:15.679Z:     at async /.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:485:1188
+2026-06-12 06:08:15.687Z: devcontainer process exited with exit code 1
+
+====================================== ERROR ====================================
+2026-06-12 06:08:15.694Z: Failed to create container.
+=================================================================================
+2026-06-12 06:08:15.694Z: Error: Command failed: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 --build-context dev_containers_feature_content_source=/tmp/devcontainercli-root/container-features/0.83.3-1781244417334 --build-arg _DEV_CONTAINERS_BASE_IMAGE=mcr.microsoft.com/devcontainers/javascript-node:22 --build-arg _DEV_CONTAINERS_IMAGE_USER=root --build-arg _DEV_CONTAINERS_FEATURE_CONTENT_SOURCE=dev_container_feature_content_temp --target dev_containers_target_stage -f /tmp/devcontainercli-root/container-features/0.83.3-1781244417334/Dockerfile.extended -t vsc-hid_to_vpad-b89337a7417cc0b592b39facab36692399aaed00c53668f0634034fd932aa50f-features /var/lib/docker/codespacemount/.persistedshare/empty-folder
+2026-06-12 06:08:15.701Z: Error code: 1302 (UnifiedContainersErrorFatalCreatingContainer)
+
+====================================== ERROR ====================================
+2026-06-12 06:08:15.714Z: Container creation failed.
+=================================================================================
+2026-06-12 06:08:15.727Z: 
+
+===================================== WARNING ===================================
+2026-06-12 06:08:15.728Z: Creating recovery container.
+=================================================================================
+
+=================================================================================
+2026-06-12 06:08:54.218Z: Creating container...
+2026-06-12 06:08:54.248Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/hid_to_vpad --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --user-data-folder /var/lib/docker/codespacemount/.persistedshare --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --omit-config-remote-env-from-metadata --skip-non-blocking-commands --skip-post-create --config "/var/lib/docker/codespacemount/workspace/hid_to_vpad/.devcontainer/devcontainer.json" --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2026-06-12 06:08:54.402Z: @devcontainers/cli 0.83.3. Node.js v18.20.8. linux 6.8.0-1052-azure x64.
+2026-06-12 06:08:55.217Z: $alpine -c echo Container started
+2026-06-12 06:08:55.259Z: Unable to find image 'mcr.microsoft.com/devcontainers/base:alpine' locally
+2026-06-12 06:08:55.547Z: alpine: Pulling from devcontainers/base
+2026-06-12 06:08:55.652Z: 
+[1A[2K6a0ac1617861: Pulling fs layer [1B
+[1A[2Kdc12e54d6bb2: Pulling fs layer [1B
+[1A[2Kff2e7d2d903d: Pulling fs layer [1B
+[1A[2Kc6d9dd5799e4: Pulling fs layer [1B
+[1A[2K3e9bb5dae524: Pulling fs layer [1B
+[1A[2K5ab9e82ff634: Pulling fs layer [1B
+[1A[2K0259fc7dfe8b: Pulling fs layer [1B[4A[2Kc6d9dd5799e4: Waiting [4B[3A[2K3e9bb5dae524: 2026-06-12 06:08:55.652Z: Waiting [3B[2A[2K5ab9e82ff634: Waiting [2B[1A[2K0259fc7dfe8b: Waiting [1B2026-06-12 06:08:55.832Z: [7A2026-06-12 06:08:55.832Z: [2K6a0ac1617861: Downloading  48.34kB/3.864MB[7B2026-06-12 06:08:55.845Z: [6A[2K2026-06-12 06:08:55.845Z: dc12e54d6bb2: Downloading     407B/407B[6B[6A[2Kdc12e54d6bb2: Verifying Checksum [6B[6A[2Kdc12e54d6bb2: Download complete [6B2026-06-12 06:08:55.936Z: [7A[2K6a0ac1617861: Downloading  3.095MB/3.864MB[7B2026-06-12 06:08:55.941Z: [7A[2K6a0ac1617861: Verifying Checksum 2026-06-12 06:08:55.942Z: [7B[7A[2K6a0ac1617861: Download complete [7B2026-06-12 06:08:55.944Z: [7A[2K6a0ac1617861: 2026-06-12 06:08:55.944Z: Extracting  65.54kB/3.864MB[7B2026-06-12 06:08:56.042Z: [4A[2Kc6d9dd5799e4: Downloading     223B/223B[4B2026-06-12 06:08:56.042Z: [4A[2Kc6d9dd5799e4: 2026-06-12 06:08:56.042Z: Verifying Checksum [4B[4A[2Kc6d9dd5799e4: Download complete [4B2026-06-12 06:08:56.045Z: [7A[2K6a0ac1617861: Extracting  1.966MB/3.864MB[7B2026-06-12 06:08:56.080Z: [7A[2K6a0ac1617861: Extracting  3.864MB/3.864MB[7B2026-06-12 06:08:56.081Z: [7A[2K6a0ac1617861: Extracting  3.864MB/3.864MB[7B2026-06-12 06:08:56.144Z: [7A[2K6a0ac1617861: Pull complete [7B2026-06-12 06:08:56.146Z: [6A[2Kdc12e54d6bb2: Extracting     407B/407B[6B2026-06-12 06:08:56.149Z: [6A[2Kdc12e54d6bb2: Extracting     407B/407B[6B2026-06-12 06:08:56.153Z: [3A[2K3e9bb5dae524: Downloading     233B/233B[3B[3A[2K3e9bb5dae524: Verifying Checksum [3B[3A[2K3e9bb5dae524: Download complete 2026-06-12 06:08:56.153Z: [3B2026-06-12 06:08:56.294Z: [2A[2K5ab9e82ff634: Downloading  538.7kB/56.2MB2026-06-12 06:08:56.294Z: [2B2026-06-12 06:08:56.396Z: [2A2026-06-12 06:08:56.397Z: [2K5ab9e82ff634: Downloading  12.42MB/56.2MB[2B2026-06-12 06:08:56.406Z: [1A2026-06-12 06:08:56.408Z: [2K2026-06-12 06:08:56.412Z: 0259fc7dfe8b: 2026-06-12 06:08:56.412Z: Downloading  538.7kB/208.7MB[1B2026-06-12 06:08:56.497Z: [2A2026-06-12 06:08:56.497Z: [2K5ab9e82ff634: Downloading  36.21MB/56.2MB[2B2026-06-12 06:08:56.506Z: [1A[2K2026-06-12 06:08:56.506Z: 0259fc7dfe8b: Downloading  7.567MB/208.7MB[1B2026-06-12 06:08:56.609Z: [2A[2K5ab9e82ff634: Downloading   48.1MB/56.2MB[2B2026-06-12 06:08:56.609Z: [1A[2K0259fc7dfe8b: Downloading  19.99MB/208.7MB[1B2026-06-12 06:08:56.658Z: [5A[2Kff2e7d2d903d: Downloading     134B/134B[5B[5A[2Kff2e7d2d903d: Verifying Checksum [5B[5A[2Kff2e7d2d903d: Download complete [5B2026-06-12 06:08:56.669Z: [2A[2K5ab9e82ff634: Downloading   56.2MB/56.2MB[2B[2A[2K5ab9e82ff634: Verifying Checksum [2B[2A[2K5ab9e82ff634: Download complete [2B2026-06-12 06:08:56.707Z: [1A[2K0259fc7dfe8b: Downloading  36.21MB/208.7MB[1B2026-06-12 06:08:56.716Z: [6A2026-06-12 06:08:56.717Z: [2Kdc12e54d6bb2: Pull complete [6B2026-06-12 06:08:56.727Z: [5A[2Kff2e7d2d903d: Extracting     134B/134B[5B[5A[2Kff2e7d2d903d: Extracting     134B/134B[5B2026-06-12 06:08:56.811Z: [1A[2K0259fc7dfe8b: Downloading  59.46MB/208.7MB[1B2026-06-12 06:08:56.914Z: [1A[2K0259fc7dfe8b: Downloading   74.6MB/208.7MB[1B2026-06-12 06:08:57.014Z: [1A[2K0259fc7dfe8b: Downloading  98.39MB/208.7MB[1B2026-06-12 06:08:57.114Z: [1A[2K0259fc7dfe8b: Downloading  120.6MB/208.7MB[1B2026-06-12 06:08:57.217Z: [1A[2K0259fc7dfe8b: Downloading  143.8MB/208.7MB[1B2026-06-12 06:08:57.318Z: [1A[2K0259fc7dfe8b: Downloading  165.4MB/208.7MB[1B2026-06-12 06:08:57.419Z: [1A2026-06-12 06:08:57.421Z: [2K0259fc7dfe8b: Downloading  184.4MB/208.7MB[1B2026-06-12 06:08:57.521Z: [1A[2K0259fc7dfe8b: Downloading  205.4MB/208.7MB[1B2026-06-12 06:08:57.532Z: [1A[2K2026-06-12 06:08:57.532Z: 0259fc7dfe8b: Verifying Checksum [1B[1A[2K0259fc7dfe8b: Download complete [1B2026-06-12 06:08:58.800Z: [5A[2Kff2e7d2d903d: 2026-06-12 06:08:58.800Z: Pull complete [5B2026-06-12 06:08:58.805Z: [4A[2Kc6d9dd5799e4: Extracting     223B/223B[4B2026-06-12 06:08:58.806Z: [4A[2Kc6d9dd5799e4: Extracting     223B/223B[4B2026-06-12 06:09:01.147Z: [4A[2Kc6d9dd5799e4: Pull complete [4B2026-06-12 06:09:01.152Z: [3A[2K3e9bb5dae524: Extracting     233B/233B[3B2026-06-12 06:09:01.152Z: [3A[2K2026-06-12 06:09:01.154Z: 3e9bb5dae524: Extracting     233B/233B[3B2026-06-12 06:09:01.193Z: [3A[2K3e9bb5dae524: Pull complete [3B2026-06-12 06:09:01.227Z: [2A[2K5ab9e82ff634: Extracting  557.1kB/56.2MB[2B2026-06-12 06:09:01.363Z: [2A[2K5ab9e82ff634: Extracting  2.228MB/56.2MB[2B2026-06-12 06:09:01.554Z: [2A[2K2026-06-12 06:09:01.554Z: 5ab9e82ff634: Extracting  6.128MB/56.2MB[2B2026-06-12 06:09:01.720Z: [2A[2K5ab9e82ff634: Extracting  6.685MB/56.2MB[2B2026-06-12 06:09:01.859Z: [2A2026-06-12 06:09:01.860Z: [2K5ab9e82ff634: Extracting   9.47MB/56.2MB[2B2026-06-12 06:09:02.071Z: [2A[2K2026-06-12 06:09:02.071Z: 5ab9e82ff634: Extracting  13.37MB/56.2MB[2B2026-06-12 06:09:02.202Z: [2A[2K2026-06-12 06:09:02.203Z: 5ab9e82ff634: Extracting  13.93MB/56.2MB[2B2026-06-12 06:09:02.330Z: [2A2026-06-12 06:09:02.330Z: [2K5ab9e82ff634: Extracting  16.15MB/56.2MB[2B2026-06-12 06:09:02.455Z: [2A[2K5ab9e82ff634: Extracting  21.17MB/56.2MB[2B2026-06-12 06:09:02.560Z: [2A[2K5ab9e82ff634: Extracting  25.62MB/56.2MB[2B2026-06-12 06:09:02.662Z: [2A[2K5ab9e82ff634: Extracting  30.08MB/56.2MB[2B2026-06-12 06:09:02.769Z: [2A[2K2026-06-12 06:09:02.770Z: 5ab9e82ff634: Extracting  35.65MB/56.2MB[2B2026-06-12 06:09:02.874Z: [2A2026-06-12 06:09:02.874Z: [2K5ab9e82ff634: Extracting  38.99MB/56.2MB[2B2026-06-12 06:09:03.250Z: [2A[2K5ab9e82ff634: Extracting  41.22MB/56.2MB[2B2026-06-12 06:09:03.491Z: [2A[2K5ab9e82ff634: Extracting  42.34MB/56.2MB[2B2026-06-12 06:09:03.652Z: [2A[2K2026-06-12 06:09:03.653Z: 5ab9e82ff634: Extracting  42.89MB/56.2MB[2B2026-06-12 06:09:03.811Z: [2A[2K5ab9e82ff634: Extracting  43.45MB/56.2MB[2B2026-06-12 06:09:03.959Z: [2A2026-06-12 06:09:03.960Z: [2K5ab9e82ff634: Extracting  44.56MB/56.2MB[2B2026-06-12 06:09:04.205Z: [2A[2K5ab9e82ff634: 2026-06-12 06:09:04.206Z: Extracting  47.91MB/56.2MB[2B2026-06-12 06:09:04.309Z: [2A[2K5ab9e82ff634: Extracting  48.46MB/56.2MB[2B2026-06-12 06:09:04.452Z: [2A[2K5ab9e82ff634: Extracting  51.25MB/56.2MB[2B2026-06-12 06:09:04.608Z: [2A[2K5ab9e82ff634: Extracting  52.36MB/56.2MB[2B2026-06-12 06:09:04.831Z: [2A[2K5ab9e82ff634: Extracting  52.92MB/56.2MB[2B2026-06-12 06:09:04.987Z: [2A[2K2026-06-12 06:09:04.988Z: 5ab9e82ff634: Extracting  53.48MB/56.2MB[2B2026-06-12 06:09:05.061Z: [2A[2K5ab9e82ff634: Extracting   56.2MB/56.2MB[2B2026-06-12 06:09:07.379Z: [2A[2K5ab9e82ff634: Pull complete [2B2026-06-12 06:09:07.418Z: [1A[2K0259fc7dfe8b: Extracting  557.1kB/208.7MB[1B2026-06-12 06:09:07.521Z: [1A[2K0259fc7dfe8b: Extracting  6.128MB/208.7MB[1B2026-06-12 06:09:07.626Z: [1A[2K0259fc7dfe8b: Extracting  12.26MB/208.7MB[1B2026-06-12 06:09:07.727Z: [1A[2K0259fc7dfe8b: Extracting  17.83MB/208.7MB[1B2026-06-12 06:09:07.828Z: [1A[2K0259fc7dfe8b: Extracting  22.28MB/208.7MB[1B2026-06-12 06:09:07.966Z: [1A[2K0259fc7dfe8b: Extracting  25.07MB/208.7MB[1B2026-06-12 06:09:08.110Z: [1A[2K2026-06-12 06:09:08.110Z: 0259fc7dfe8b: Extracting  26.18MB/208.7MB[1B2026-06-12 06:09:08.252Z: [1A[2K0259fc7dfe8b: Extracting  26.74MB/208.7MB[1B2026-06-12 06:09:08.425Z: [1A[2K0259fc7dfe8b: Extracting  27.85MB/208.7MB[1B2026-06-12 06:09:08.589Z: [1A[2K0259fc7dfe8b: Extracting  28.41MB/208.7MB[1B2026-06-12 06:09:08.720Z: [1A[2K0259fc7dfe8b: Extracting  31.75MB/208.7MB[1B2026-06-12 06:09:08.842Z: [1A[2K0259fc7dfe8b: Extracting  32.87MB/208.7MB[1B2026-06-12 06:09:08.943Z: [1A[2K0259fc7dfe8b: Extracting  37.88MB/208.7MB[1B2026-06-12 06:09:09.049Z: [1A[2K0259fc7dfe8b: Extracting  42.89MB/208.7MB[1B2026-06-12 06:09:09.158Z: [1A[2K0259fc7dfe8b: Extracting  47.35MB/208.7MB[1B2026-06-12 06:09:09.260Z: [1A[2K0259fc7dfe8b: Extracting  51.81MB/208.7MB[1B2026-06-12 06:09:09.375Z: [1A[2K0259fc7dfe8b: Extracting  55.15MB/208.7MB[1B2026-06-12 06:09:09.485Z: [1A2026-06-12 06:09:09.485Z: [2K0259fc7dfe8b: Extracting  57.93MB/208.7MB[1B2026-06-12 06:09:09.604Z: [1A[2K2026-06-12 06:09:09.604Z: 0259fc7dfe8b: Extracting  60.72MB/208.7MB[1B2026-06-12 06:09:09.705Z: [1A2026-06-12 06:09:09.705Z: [2K0259fc7dfe8b: Extracting   63.5MB/208.7MB[1B2026-06-12 06:09:09.807Z: [1A[2K2026-06-12 06:09:09.808Z: 0259fc7dfe8b: Extracting  70.19MB/208.7MB[1B2026-06-12 06:09:09.910Z: [1A2026-06-12 06:09:09.911Z: [2K0259fc7dfe8b: Extracting  76.32MB/208.7MB[1B2026-06-12 06:09:10.073Z: [1A2026-06-12 06:09:10.073Z: [2K0259fc7dfe8b: Extracting   79.1MB/208.7MB[1B2026-06-12 06:09:10.178Z: [1A[2K0259fc7dfe8b: Extracting     83MB/208.7MB[1B2026-06-12 06:09:10.286Z: [1A[2K0259fc7dfe8b: Extracting  84.67MB/208.7MB[1B2026-06-12 06:09:10.401Z: [1A2026-06-12 06:09:10.402Z: [2K0259fc7dfe8b: Extracting  85.79MB/208.7MB[1B2026-06-12 06:09:10.542Z: [1A[2K0259fc7dfe8b: Extracting   86.9MB/208.7MB[1B2026-06-12 06:09:10.643Z: [1A[2K0259fc7dfe8b: Extracting  89.13MB/208.7MB[1B2026-06-12 06:09:10.762Z: [1A[2K2026-06-12 06:09:10.762Z: 0259fc7dfe8b: Extracting  96.37MB/208.7MB[1B2026-06-12 06:09:10.890Z: [1A[2K0259fc7dfe8b: Extracting   98.6MB/208.7MB[1B2026-06-12 06:09:11.004Z: [1A[2K0259fc7dfe8b: Extracting  102.5MB/208.7MB[1B2026-06-12 06:09:11.111Z: [1A[2K0259fc7dfe8b: 2026-06-12 06:09:11.111Z: Extracting  109.7MB/208.7MB[1B2026-06-12 06:09:11.219Z: [1A[2K0259fc7dfe8b: Extracting  116.4MB/208.7MB[1B2026-06-12 06:09:11.327Z: [1A[2K2026-06-12 06:09:11.328Z: 0259fc7dfe8b: Extracting  121.4MB/208.7MB[1B2026-06-12 06:09:11.426Z: [1A[2K0259fc7dfe8b: Extracting  127.6MB/208.7MB[1B2026-06-12 06:09:11.538Z: [1A2026-06-12 06:09:11.538Z: [2K2026-06-12 06:09:11.539Z: 0259fc7dfe8b: Extracting  134.3MB/208.7MB[1B2026-06-12 06:09:11.641Z: [1A2026-06-12 06:09:11.642Z: [2K0259fc7dfe8b: Extracting  139.8MB/208.7MB[1B2026-06-12 06:09:13.407Z: [1A[2K0259fc7dfe8b: Extracting  140.4MB/208.7MB[1B2026-06-12 06:09:13.508Z: [1A2026-06-12 06:09:13.509Z: [2K0259fc7dfe8b: Extracting  147.1MB/208.7MB[1B2026-06-12 06:09:13.615Z: [1A2026-06-12 06:09:13.615Z: [2K0259fc7dfe8b: Extracting  153.7MB/208.7MB2026-06-12 06:09:13.616Z: [1B2026-06-12 06:09:13.717Z: [1A[2K2026-06-12 06:09:13.718Z: 0259fc7dfe8b: Extracting  159.9MB/208.7MB[1B2026-06-12 06:09:13.822Z: [1A[2K0259fc7dfe8b: Extracting    166MB/208.7MB[1B2026-06-12 06:09:13.923Z: [1A[2K2026-06-12 06:09:13.923Z: 0259fc7dfe8b: Extracting  172.1MB/208.7MB[1B2026-06-12 06:09:14.031Z: [1A2026-06-12 06:09:14.031Z: [2K0259fc7dfe8b: Extracting  178.8MB/208.7MB[1B2026-06-12 06:09:14.131Z: [1A2026-06-12 06:09:14.131Z: [2K0259fc7dfe8b: Extracting  184.9MB/208.7MB[1B2026-06-12 06:09:14.241Z: [1A2026-06-12 06:09:14.241Z: [2K0259fc7dfe8b: Extracting  191.1MB/208.7MB2026-06-12 06:09:14.241Z: [1B2026-06-12 06:09:14.337Z: [1A[2K0259fc7dfe8b: Extracting  196.1MB/208.7MB[1B2026-06-12 06:09:14.492Z: [1A[2K0259fc7dfe8b: Extracting    200MB/208.7MB[1B2026-06-12 06:09:14.637Z: [1A[2K0259fc7dfe8b: Extracting  201.1MB/208.7MB[1B2026-06-12 06:09:14.810Z: [1A[2K0259fc7dfe8b: Extracting  202.8MB/208.7MB[1B2026-06-12 06:09:15.111Z: [1A[2K0259fc7dfe8b: Extracting    205MB/208.7MB[1B2026-06-12 06:09:15.242Z: [1A[2K0259fc7dfe8b: Extracting  206.1MB/208.7MB[1B2026-06-12 06:09:15.507Z: [1A[2K2026-06-12 06:09:15.507Z: 0259fc7dfe8b: Extracting  206.7MB/208.7MB[1B2026-06-12 06:09:15.645Z: [1A[2K0259fc7dfe8b: Extracting  207.8MB/208.7MB[1B2026-06-12 06:09:15.820Z: [1A[2K0259fc7dfe8b: Extracting  208.3MB/208.7MB[1B2026-06-12 06:09:16.009Z: [1A[2K0259fc7dfe8b: Extracting  208.7MB/208.7MB[1B2026-06-12 06:09:23.176Z: [1A[2K0259fc7dfe8b: Pull complete [1B2026-06-12 06:09:23.186Z: Digest: sha256:5999e9adbf91b6389e129cfe2f488a04f58ea06bf08acbaf2390a5ccf76132c4
+2026-06-12 06:09:23.191Z: Status: Downloaded newer image for mcr.microsoft.com/devcontainers/base:alpine
+2026-06-12 06:09:23.344Z: Container started
+2026-06-12 06:09:23.594Z: Outcome: success User: vscode WorkspaceFolder: /workspaces/hid_to_vpad
+2026-06-12 06:09:23.604Z: devcontainer process exited with exit code 0
+
+=================================================================================
+2026-06-12 06:09:24.223Z: Running blocking commands...
+2026-06-12 06:09:24.287Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/hid_to_vpad --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --user-data-folder /var/lib/docker/codespacemount/.persistedshare --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --omit-config-remote-env-from-metadata --skip-non-blocking-commands --expect-existing-container --config "/var/lib/docker/codespacemount/workspace/hid_to_vpad/.devcontainer/devcontainer.json" --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2026-06-12 06:09:24.563Z: @devcontainers/cli 0.83.3. Node.js v18.20.8. linux 6.8.0-1052-azure x64.
+2026-06-12 06:09:24.931Z: Outcome: success User: vscode WorkspaceFolder: /workspaces/hid_to_vpad
+2026-06-12 06:09:24.943Z: devcontainer process exited with exit code 0
+
+=================================================================================
+2026-06-12 06:09:24.956Z: Configuring codespace...
+
+=================================================================================
+2026-06-12 06:09:24.962Z: Finished configuring codespace.
