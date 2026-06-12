@@ -189,12 +189,15 @@ Para continuar el desarrollo en un entorno nuevo (como Codespaces):
     docker build . -t hid-to-vpad-plugin-builder
     ```
 
-2.  **Compilación:**
+2.  **Compilación y Validación:**
+    Puedes usar el script que replica el flujo del CI de manera local:
     ```sh
-    docker run -it --rm -v ${PWD}:/project hid-to-vpad-plugin-builder make
+    ./tools/local_ci.sh
     ```
+    Esto aplicará el formato, generará el encabezado de versión y compilará el `.wps` usando Docker.
 
-3.  **Formato de código:** El proyecto utiliza `clang-format`. Asegúrate de tenerlo instalado y aplicado antes de commitear:
+3.  **Formato de código:**
+ El proyecto utiliza `clang-format`. Asegúrate de tenerlo instalado y aplicado antes de commitear:
     ```sh
     clang-format -i src/*.cpp src/*.h tools/*.py
     ```
