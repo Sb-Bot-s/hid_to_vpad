@@ -1,4 +1,4 @@
-# Gemini.md — hid_to_vpad · refactor-network-logic branch
+# Gemini.md — hid_to_vpad · Nw-SH branch
 
 ## Propósito del proyecto
 
