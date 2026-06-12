@@ -177,6 +177,11 @@ Se ha refactorizado el protocolo de comunicación entre cliente y plugin. Ya no 
 - **Cliente:** `tools/hid_to_vpad_keyboard_client.py` ha sido actualizado para enviar `ControllerState`.
 
 ### Configuración en Codespaces / Docker
+El proyecto ya incluye una configuración de **GitHub Codespaces** (`.devcontainer`) que instala automáticamente:
+- **Gemini CLI**: Para que el agente trabaje nativamente.
+- **Docker-in-Docker**: Para ejecutar el contenedor de build.
+- **Herramientas C++**: Extensiones y `clang-format`.
+
 Para continuar el desarrollo en un entorno nuevo (como Codespaces):
 
 1.  **Entorno Docker:** Este proyecto requiere `devkitppc` para compilar. Utiliza el `Dockerfile` en la raíz para construir la imagen necesaria:
