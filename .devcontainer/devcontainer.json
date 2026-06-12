@@ -9,7 +9,10 @@
     "vscode": {
       "extensions": [
         "ms-vscode.vscode-json",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "ms-vscode.cpptools",
+        "ms-python.python",
+        "xaver.clang-format"
       ]
     }
   }
